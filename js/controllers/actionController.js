@@ -104,9 +104,37 @@ class ActionController {
             unlocked: true,
             autoRestart: false,
             isRestAction: true,
-            statRewards: {
-                'health': 0.5, // Health per second
-                'stamina': 1 // Stamina per second
+            progressRewards: {
+                "20": {
+                    stats: {
+                        'health': 0.5,
+                        'stamina': 1
+                    }
+                },
+                "40": {
+                    stats: {
+                        'health': 0.5,
+                        'stamina': 1
+                    }
+                },
+                "60": {
+                    stats: {
+                        'health': 0.5,
+                        'stamina': 1
+                    }
+                },
+                "80": {
+                    stats: {
+                        'health': 0.5,
+                        'stamina': 1
+                    }
+                },
+                "99": {
+                    stats: {
+                        'health': 0.5,
+                        'stamina': 1
+                    }
+                }
             },
             messages: {
                 start: 'You find an abandoned building to rest in...',
@@ -150,6 +178,24 @@ class ActionController {
             description: description,
             isRestAction: options.isRestAction || false,
             unlocked: action.unlocked
+        });
+        
+        // Emit action data-ready event to update tooltips
+        this.eventController.emit('action:data-ready', {
+            id: action.id,
+            name: action.name,
+            description: action.description,
+            statCosts: action.statCosts,
+            currencyCosts: action.currencyCosts,
+            statRewards: action.statRewards, 
+            currencyRewards: action.currencyRewards,
+            skillExperience: action.skillExperience,
+            randomRewards: action.randomRewards,
+            progressRewards: action.progressRewards, // Include progress rewards
+            isRestAction: action.isRestAction,
+            unlocked: action.unlocked,
+            completionCount: action.completionCount,
+            progress: action.currentProgress
         });
         
         return action;
@@ -523,10 +569,38 @@ class ActionController {
                     baseDuration: 5000,
                     isRestAction: true,
                     autoRestart: false,
-                    statRewards: {
-                        'health': 0.5,
-                        'stamina': 1
-                    }
+                    progressRewards: {
+                        "20": {
+                            stats: {
+                                'health': 0.5,
+                                'stamina': 1
+                            }
+                        },
+                        "40": {
+                            stats: {
+                                'health': 0.5,
+                                'stamina': 1
+                            }
+                        },
+                        "60": {
+                            stats: {
+                                'health': 0.5,
+                                'stamina': 1
+                            }
+                        },
+                        "80": {
+                            stats: {
+                                'health': 0.5,
+                                'stamina': 1
+                            }
+                        },
+                        "99": {
+                            stats: {
+                                'health': 0.5,
+                                'stamina': 1
+                            }
+                        }
+                    },
                 });
                 
                 // Set as rest action
@@ -578,6 +652,7 @@ class ActionController {
                 currencyRewards: action.currencyRewards,
                 skillExperience: action.skillExperience,
                 randomRewards: action.randomRewards,
+                progressRewards: action.progressRewards, // Include progress rewards
                 isRestAction: action.isRestAction,
                 unlocked: action.unlocked,
                 completionCount: action.completionCount,

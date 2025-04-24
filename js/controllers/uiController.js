@@ -298,9 +298,12 @@ class UIController {
      * @param {number} gainRate - Rate at which this currency is gained per second
      */
     addCurrency(currencyId, currencyName, currencyType, currentValue, maxValue, gainRate) {
+        // Ensure the currency name is properly capitalized
+        const displayName = this.capitalizeFirstLetter(currencyName);
+        
         const currencyElement = this.createCurrencyElement(
             currencyId, 
-            currencyName, 
+            displayName, // Use capitalized name
             currencyType, 
             currentValue, 
             maxValue, 
@@ -313,6 +316,12 @@ class UIController {
         
         // Store a reference to easily find this element later
         this.currencyContainers[currencyId] = `currency-${currencyId}`;
+    }
+    
+    // Add this helper method to the UIController class
+    capitalizeFirstLetter(string) {
+        if (!string) return '';
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     /**
@@ -385,7 +394,7 @@ class UIController {
                 const reward = rewards.statRewards[statId];
                 // Capitalize the first letter of the stat name
                 const statName = statId.charAt(0).toUpperCase() + statId.slice(1);
-                result += `${statName}: ${reward}\n`;
+                result += `${statName}: ${reward} on completion\n`;
             }
         }
         
@@ -395,7 +404,7 @@ class UIController {
                 const reward = rewards.currencyRewards[currencyId];
                 // Capitalize the first letter of the currency name
                 const currencyName = currencyId.charAt(0).toUpperCase() + currencyId.slice(1);
-                result += `${currencyName}: ${reward}\n`;
+                result += `${currencyName}: ${reward} on completion\n`;
             }
         }
         
@@ -405,7 +414,36 @@ class UIController {
                 const exp = rewards.skillExperience[skillId];
                 // Capitalize the first letter of the skill name
                 const skillName = skillId.charAt(0).toUpperCase() + skillId.slice(1);
-                result += `${skillName} XP: ${exp}\n`;
+                result += `${skillName} XP: ${exp} on completion\n`;
+            }
+        }
+        
+        // Format progress rewards if they exist
+        if (rewards.progressRewards && Object.keys(rewards.progressRewards).length > 0) {
+            // Get all stat rewards across all thresholds
+            const statProgressRewards = {};
+            
+            // Collect all stats from all thresholds
+            for (const threshold in rewards.progressRewards) {
+                const thresholdRewards = rewards.progressRewards[threshold];
+                if (thresholdRewards.stats) {
+                    for (const statId in thresholdRewards.stats) {
+                        if (!statProgressRewards[statId]) {
+                            statProgressRewards[statId] = 0;
+                        }
+                        statProgressRewards[statId] += thresholdRewards.stats[statId];
+                    }
+                }
+            }
+            
+            // Get the number of thresholds to calculate per-second rates
+            const thresholdCount = Object.keys(rewards.progressRewards).length;
+            
+            // Add progress stat rewards to result
+            for (const statId in statProgressRewards) {
+                const totalReward = statProgressRewards[statId];
+                const statName = statId.charAt(0).toUpperCase() + statId.slice(1);
+                result += `${statName}: ${totalReward} total while in progress\n`;
             }
         }
         
@@ -769,12 +807,16 @@ class UIController {
         // Update tooltip with rewards
         const rewardsElement = container.querySelector('.action-rewards');
         if (rewardsElement) {
-            const formattedRewards = this.formatRewards({
+            // Prepare a rewards object that includes both standard rewards and progress rewards
+            const rewardsData = {
                 statRewards: actionData.statRewards,
                 currencyRewards: actionData.currencyRewards,
                 skillExperience: actionData.skillExperience,
-                randomRewards: actionData.randomRewards
-            });
+                randomRewards: actionData.randomRewards,
+                progressRewards: actionData.progressRewards // Add progress rewards to be formatted
+            };
+            
+            const formattedRewards = this.formatRewards(rewardsData);
             
             rewardsElement.innerHTML = 'Rewards:<br>' + (formattedRewards ? formattedRewards.replace(/\n/g, '<br>') : 'None');
         }

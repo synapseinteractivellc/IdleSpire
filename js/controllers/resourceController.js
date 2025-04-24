@@ -210,13 +210,16 @@ class ResourceController {
      * @returns {Currency} The created currency
      */
     addCurrency(id, name, description, options = {}) {
+        // Ensure first letter is capitalized
+        const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+        
         // Default values more appropriate for game currencies
         const initialValue = options.initialValue || 0;
         const maxValue = options.maxValue || 10;
         
         const currency = new Currency(
             id,
-            name,
+            displayName, // Use capitalized name
             description,
             initialValue,
             maxValue,
@@ -236,7 +239,7 @@ class ResourceController {
         // Emit currency added event
         this.eventController.emit('currency:added', {
             id: id,
-            name: name,
+            name: displayName, // Use capitalized name
             type: options.type || id,
             current: currency.current,
             max: currency.max,

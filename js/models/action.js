@@ -405,7 +405,6 @@ class Action {
         // Check if we've crossed any progress thresholds
         for (const threshold in this.progressRewards) {
             const thresholdValue = parseFloat(threshold);
-            
             // If we've crossed this threshold in this update
             if (oldProgress < thresholdValue && newProgress >= thresholdValue) {
                 const thresholdRewards = this.progressRewards[threshold];
