@@ -55,18 +55,18 @@ class GameState {
           
           // Starting stats based on character class
           stats: {
-              health: {current: 10, max: 10, gainRate: 0},
-              stamina: {current: 10, max: 10, gainRate: 0}
+              health: {current: 10, max: 10, gainRate: 0.1},
+              stamina: {current: 10, max: 10, gainRate: 0.1}
           },
           
-          // Starting skills (empty for now)
+          // Starting skills
           skills: {
               survival: {level: 0, exp: 0, maxLevel: 5, xpToNext: 100}
           },
           
           // Starting currencies
           currencies: {
-              gold: {current: 0, max: 10, gainRate: 0}
+              gold: {current: 0, max: 10, gainRate: 0.1}
           },
           
           // Available actions

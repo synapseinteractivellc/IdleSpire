@@ -2,8 +2,9 @@
 // The controller interface for the game
 
 class GameController {
-    constructor(eventController) {
+    constructor(eventController, gameState) {
         this.eventController = eventController;
+        this.gameState = gameState;
         
         // Subscribe to events that the GameController should respond to
         this.subscribeToEvents();
@@ -34,7 +35,12 @@ class GameController {
      * @param {number} gainRate - The rate at which the stat is gained (optional)
      */
     updateStatValue(statId, newValue, maxValue, gainRate) {
-        // Update the model (would happen here)
+        // Update the model through gameState
+        this.gameState.updateStat(statId, {
+            current: newValue,
+            max: maxValue,
+            gainRate: gainRate || 0
+        });
         
         // Then emit an event for the UI to update
         this.eventController.emit('stat:updated', {
@@ -76,7 +82,12 @@ class GameController {
      * @param {number} gainRate - The rate at which the currency is gained (optional)
      */
     updateCurrencyValue(currencyId, newValue, maxValue, gainRate) {
-        // Update the model (would happen here)
+        // Update the model through gameState
+        this.gameState.updateCurrency(currencyId, {
+            current: newValue,
+            max: maxValue,
+            gainRate: gainRate || 0
+        });
         
         // Then emit an event for the UI to update
         this.eventController.emit('currency:updated', {

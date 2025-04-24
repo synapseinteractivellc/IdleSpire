@@ -94,6 +94,7 @@ class UIController {
         // Add a unique identifier to the container
         const container = statElement.querySelector('.stat-container');
         container.id = `stat-${statId}`;
+        container.classList.add(`${statType}-stat`);
         
         return statElement;
     }
