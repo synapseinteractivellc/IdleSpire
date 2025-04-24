@@ -433,7 +433,7 @@ class UIController {
         
         // Get the action object from the game's action controller if available
         let action = null;
-        if (window.game && window.game.actionController) {
+        if (window.game && window.game.actionController) {            
             action = window.game.actionController.actions[actionData.id];
         }
         
@@ -448,24 +448,27 @@ class UIController {
         button.querySelector('.action-current-percentage').textContent = 'Progress: 0%';
         
         // Format costs if we have the action object
-        if (action) {
-            const costsElement = button.querySelector('.action-costs');
-            if (costsElement) {
+        
+        const costsElement = button.querySelector('.action-costs');
+        if (costsElement) {
+            if (action && (action.statCosts || action.currencyCosts)) {
                 const formattedCosts = this.formatCosts({
                     statCosts: action.statCosts,
                     currencyCosts: action.currencyCosts
                 });
-                
-                if (formattedCosts && formattedCosts !== 'None') {
-                    costsElement.innerHTML = 'Costs:<br>' + formattedCosts.replace(/\n/g, '<br>');
-                } else {
-                    costsElement.remove();
-                }
-            }
             
-            // Format rewards if we have the action object
-            const rewardsElement = button.querySelector('.action-rewards');
-            if (rewardsElement) {
+                costsElement.innerHTML = 'Costs:<br>' + formattedCosts.replace(/\n/g, '<br>');
+            } else {
+                // If no costs data, remove the element or set to "None"
+                costsElement.innerHTML = 'Costs:<br>None';
+            }
+        }
+
+        
+        // Format rewards if we have the action object
+        const rewardsElement = button.querySelector('.action-rewards');
+        if (rewardsElement) {
+            if (action && (action.statRewards || action.currencyRewards || action.skillExperience || action.randomRewards)) {
                 const formattedRewards = this.formatRewards({
                     statRewards: action.statRewards,
                     currencyRewards: action.currencyRewards,
@@ -473,21 +476,11 @@ class UIController {
                     randomRewards: action.randomRewards
                 });
                 
-                if (formattedRewards && formattedRewards !== 'None') {
-                    rewardsElement.innerHTML = 'Rewards:<br>' + formattedRewards.replace(/\n/g, '<br>');
-                } else {
-                    rewardsElement.remove();
-                }
+                rewardsElement.innerHTML = 'Rewards:<br>' + formattedRewards.replace(/\n/g, '<br>');
+            } else {
+                // If no rewards data, remove the element or set to "None"
+                rewardsElement.innerHTML = 'Rewards:<br>None';
             }
-        } else {
-            // If we don't have the action object, just remove the cost/reward elements
-            /*
-            const costsElement = button.querySelector('.action-costs');
-            if (costsElement) costsElement.remove();
-            
-            const rewardsElement = button.querySelector('.action-rewards');
-            if (rewardsElement) rewardsElement.remove();
-            */
         }
         
         // Add event listener
