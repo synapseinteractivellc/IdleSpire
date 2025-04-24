@@ -565,6 +565,25 @@ class ActionController {
                 message: `Resuming ${this.activeAction.name}`
             });
         }
+
+        for (const actionId in this.actions) {
+            const action = this.actions[actionId];
+            this.eventController.emit('action:data-ready', {
+                id: action.id,
+                name: action.name,
+                description: action.description,
+                statCosts: action.statCosts,
+                currencyCosts: action.currencyCosts,
+                statRewards: action.statRewards, 
+                currencyRewards: action.currencyRewards,
+                skillExperience: action.skillExperience,
+                randomRewards: action.randomRewards,
+                isRestAction: action.isRestAction,
+                unlocked: action.unlocked,
+                completionCount: action.completionCount,
+                progress: action.currentProgress
+            });
+        }
     }
     
     /**

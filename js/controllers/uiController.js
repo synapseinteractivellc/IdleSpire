@@ -22,7 +22,8 @@ class UIController {
     /**
      * Initialize the UI
      */
-    init() {
+    init() {        
+        console.log('Initializing UIController...');
         // Set up initial UI elements
         this.setupEventListeners();
     }
@@ -118,6 +119,11 @@ class UIController {
         this.eventController.on('action:unlocked', (data) => {
             this.addActionButton(data);
             this.showActionUnlockedMessage(data);
+        });
+
+        // Listen for action data to be ready after a load
+        this.eventController.on('action:data-ready', (actionData) => {
+            this.updateActionTooltipData(actionData);
         });
     }
     
@@ -702,10 +708,57 @@ class UIController {
         }
     }
 
+    /**
+     * Update an action completion count
+     * @param {Object} completionData - Data about the action completion
+     */
     updateActionCompletion(completionData) {
         const button = document.getElementById(`action-${completionData.id}`);
         if (!button) return;
 
         button.querySelector('.action-completions').textContent = `Completions: ${completionData.completionCount}`;
+    }
+
+    /**
+     * Update an action tooltip after load
+     * @param {Object} actionData - Data about the action
+     */
+    updateActionTooltipData(actionData) {
+        const button = document.getElementById(`action-${actionData.id}`);
+        if (!button) return;
+        
+        // Update tooltip with costs
+        const costsElement = button.querySelector('.action-costs');
+        if (costsElement) {
+            const formattedCosts = this.formatCosts({
+                statCosts: actionData.statCosts,
+                currencyCosts: actionData.currencyCosts
+            });
+            
+            costsElement.innerHTML = 'Costs:<br>' + (formattedCosts ? formattedCosts.replace(/\n/g, '<br>') : 'None');
+        }
+        
+        // Update tooltip with rewards
+        const rewardsElement = button.querySelector('.action-rewards');
+        if (rewardsElement) {
+            const formattedRewards = this.formatRewards({
+                statRewards: actionData.statRewards,
+                currencyRewards: actionData.currencyRewards,
+                skillExperience: actionData.skillExperience,
+                randomRewards: actionData.randomRewards
+            });
+            
+            rewardsElement.innerHTML = 'Rewards:<br>' + (formattedRewards ? formattedRewards.replace(/\n/g, '<br>') : 'None');
+        }
+        
+        // Update completion count if available
+        if (actionData.completionCount !== undefined) {
+            const completionsElement = button.querySelector('.action-completions');
+            if (completionsElement) {
+                completionsElement.textContent = `Completions: ${actionData.completionCount}`;
+            }
+        }
+
+        this.updateActionProgress(actionData);
     }
 }
