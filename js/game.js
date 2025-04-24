@@ -12,6 +12,7 @@ class Game {
         // Create controllers
         this.uiController = new UIController(this.eventController);
         this.resourceController = new ResourceController(this.eventController, this.gameState);
+        this.characterController = new CharacterController(this.eventController, this.gameState);
         this.saveController = new SaveController(this.eventController, this.gameState);
         this.actionLogController = new ActionLogController(this.eventController);
         
@@ -189,6 +190,8 @@ class Game {
         
         // Save the game state
         this.saveController.saveGame();
+
+        console.log('Game state saved with character:', character);
         
         // Emit character creation event
         this.eventController.emit('character:created', characterData);

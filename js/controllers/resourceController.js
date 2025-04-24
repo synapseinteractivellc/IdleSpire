@@ -29,16 +29,15 @@ class ResourceController {
      */
     subscribeToEvents() {
         // Listen for character creation to initialize resources
-        this.eventController.on('character:created', (data) => {
+        this.eventController.on('character:needResources', (data) => {
             this.initializeCharacterResources(data);
         });
     }
     
     /**
      * Initialize resources for a new character
-     * @param {Object} characterData - Basic character creation data
      */
-    initializeCharacterResources(characterData) {
+    initializeCharacterResources() {
         const character = this.gameState.getActiveCharacter();
         if (!character) return;
         
@@ -46,10 +45,7 @@ class ResourceController {
         this.createBasicStats(character);
         
         // Create basic currencies
-        this.createBasicCurrencies(character);
-        
-        // Emit events for UI updates
-        this.emitResourceEvents();
+        this.createBasicCurrencies(character);        
     }
     
     /**
@@ -57,43 +53,38 @@ class ResourceController {
      * @param {Object} character - The character object
      */
     createBasicStats(character) {
-        // Health stat
-        const healthStat = new Stat(
+        // Add health stat
+        const healthStat = this.addStat(
             'health',
             'Health',
             'Your physical well-being. If it reaches zero, you\'ll be incapacitated.',
-            10,  
-            10,
-            0, 
             {
-                regenRate: 0.01,
-                color: 'hsl(0, 70%, 50%)'
+                initialValue: 10,
+                maxValue: 10,
+                gainRate: 0,
+                type: 'health',
+                color: 'hsl(0, 70%, 50%)',
+                baseValue: 10,
+                regenRate: 0.01
             }
         );
         
-        // Stamina stat
-        const staminaStat = new Stat(
+        // Add stamina stat
+        const staminaStat = this.addStat(
             'stamina',
             'Stamina',
             'Your physical energy. Used for physical actions and travel.',
-            10,
-            10,
-            0,
             {
+                initialValue: 10,
+                maxValue: 10,
+                gainRate: 0,
+                type: 'stamina',
+                color: 'hsl(145, 60%, 40%)',
+                baseValue: 10,
                 regenRate: 0.05,
-                color: 'hsl(145, 60%, 40%)'
+                priority: 1
             }
         );
-        
-        // Store stats in controller
-        this.stats['health'] = healthStat;
-        this.stats['stamina'] = staminaStat;
-        
-        // Store in character data
-        character.stats = {
-            health: healthStat.serialize(),
-            stamina: staminaStat.serialize()
-        };
     }
     
     /**
@@ -101,28 +92,20 @@ class ResourceController {
      * @param {Object} character - The character object
      */
     createBasicCurrencies(character) {
-        // Gold currency
-        const goldCurrency = new Currency(
+        // Add gold currency
+        const goldCurrency = this.addCurrency(
             'gold',
             'Gold',
             'Basic currency used for most transactions.',
-            0,  // Initial value
-            10, // Max value
-            0, // Gain rate
             {
+                initialValue: 0,
+                maxValue: 10,
+                gainRate: 0,
                 type: 'gold',
                 color: 'hsl(48, 100%, 67%)',
                 isPremium: false
             }
         );
-        
-        // Store currencies in controller
-        this.currencies['gold'] = goldCurrency;
-        
-        // Store in character data
-        character.currencies = {
-            gold: goldCurrency.serialize()
-        };
     }
     
     /**
