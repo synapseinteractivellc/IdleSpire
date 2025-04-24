@@ -107,10 +107,10 @@ class Game {
         // TODO: Initialize GameState with character data
         
         // For testing, let's create some sample stats and currencies
-        this.gameController.addNewStat('health', 'Health', 'health', 10, 10, 0.1);
-        this.gameController.addNewStat('stamina', 'Stamina', 'stamina', 5, 10, 0.2);
+        this.gameController.addNewStat('health', 'Health', 'health', 10, 10, 0);
+        this.gameController.addNewStat('stamina', 'Stamina', 'stamina', 10, 10, 0);
         
-        this.gameController.addNewCurrency('gold', 'Gold', 'gold', 0, 100, 0.5);
+        this.gameController.addNewCurrency('gold', 'Gold', 'gold', 0, 10, 0);
         
         // Log a test event
         this.testEventController.logMessage('Game state initialized with character: ' + characterData.name);

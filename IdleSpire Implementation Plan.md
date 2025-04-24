@@ -15,7 +15,7 @@ The game follows an MVC (Model-View-Controller) architecture:
 
 #### 1.1 Event System
 - [x] Implement `EventController` for pub/sub communication between components
-- [ ] Test event emission and subscription
+- [x] Test event emission and subscription
 
 #### 1.2 Game State Management
 - [ ] Complete `GameState` class to hold all game data
@@ -23,8 +23,8 @@ The game follows an MVC (Model-View-Controller) architecture:
 - [ ] Set up game state update mechanisms
 
 #### 1.3 Save/Load System
-- [ ] Implement `SaveController` to persist game state to localStorage
-- [ ] Add auto-save functionality
+- [x] Implement `SaveController` to persist game state to localStorage
+- [x] Add auto-save functionality
 - [ ] Implement save migration system for future updates
 
 #### 1.4 Basic UI Framework
