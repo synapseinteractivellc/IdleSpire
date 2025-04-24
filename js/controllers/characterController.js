@@ -56,8 +56,11 @@ class CharacterController {
             return null;
         }
 
-        // Initialize basic resources based on character class
+        // Initialize basic resources
         this.initializeCharacterResources(character);
+
+        // Initialize character basic actions
+        this.initializeCharacterActions(character);        
 
         return character;
     }
@@ -66,8 +69,18 @@ class CharacterController {
      * Initialize default resources for characters
      * @param {Character} character - The character to initialize
      */
-    initializeCharacterResources(character) {        
+    initializeCharacterResources(character) {
+        if (!character) return;
         this.eventController.emit('character:needResources', character);
+    }
+
+    /**
+     * Initialize default actions for characters
+     * @param {Character} character - The character to initialize
+     */
+    initializeCharacterActions(character) {  
+        if (!character) return;
+        this.eventController.emit('character:needActions', character);
     }
 
     /**

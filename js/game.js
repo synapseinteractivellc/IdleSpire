@@ -15,6 +15,7 @@ class Game {
         this.characterController = new CharacterController(this.eventController, this.gameState);
         this.saveController = new SaveController(this.eventController, this.gameState);
         this.actionLogController = new ActionLogController(this.eventController);
+        this.actionController = new ActionController(this.eventController, this.gameState);
         
         // Create test controller if in development mode
         // this.testEventController = new TestEventController(this.eventController);
@@ -38,6 +39,7 @@ class Game {
         this.resourceController.init();
         this.saveController.init();
         this.actionLogController.init();
+        this.actionController.init();
         
         // Initialize test controller in development mode
         // this.testEventController.init();
@@ -108,6 +110,9 @@ class Game {
     update(deltaTime) {
         // Update resources
         this.resourceController.updateResources(deltaTime);
+
+        // Update actions
+        this.actionController.updateActions(deltaTime);
         
         // Other update logic will go here as it's implemented
     }

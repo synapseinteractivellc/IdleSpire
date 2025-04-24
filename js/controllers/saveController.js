@@ -75,6 +75,24 @@ class SaveController {
               }
           });
       }
+
+      const wipeButton1 = document.getElementById('wipe-button-1');
+      if (wipeButton1) {
+        wipeButton1.addEventListener('click', () => {
+            if (confirm('Are you sure you want to wipe your save data? This cannot be undone.')) {
+                this.wipeSave();
+                this.eventController.emit('ui:notification', {
+                    message: 'Save data wiped. Refreshing game...',
+                    type: 'warning'
+                });
+                
+                // Give time for notification to display before refresh
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        });
+    }
   }
   
   /**

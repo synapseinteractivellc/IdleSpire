@@ -28,21 +28,6 @@ class ActionLogController {
      * Subscribe to game events
      */
     subscribeToEvents() {
-        // Log when a stat changes
-        this.eventController.on('stat:updated', data => {
-            this.addLogEntry(`${data.id.charAt(0).toUpperCase() + data.id.slice(1)} changed to ${Math.floor(data.current)}/${data.max}`);
-        });
-        
-        // Log when a currency changes
-        this.eventController.on('currency:updated', data => {
-            this.addLogEntry(`${data.id.charAt(0).toUpperCase() + data.id.slice(1)} changed to ${Math.floor(data.current)}/${data.max}`);
-        });
-        
-        // Log when player takes an action
-        this.eventController.on('action:started', data => {
-            this.addLogEntry(`Started action: ${data.name}`);
-        });
-        
         this.eventController.on('action:completed', data => {
             this.addLogEntry(`Completed action: ${data.name}`, true);
         });

@@ -32,6 +32,16 @@ class ResourceController {
         this.eventController.on('character:needResources', (data) => {
             this.initializeCharacterResources(data);
         });
+
+        // Subscribe to resource cost events
+        this.eventController.on('resource:cost', (data) => {
+            this.handleResourceCost(data);
+        });
+        
+        // Subscribe to resource reward events
+        this.eventController.on('resource:reward', (data) => {
+            this.handleResourceReward(data);
+        });
     }
     
     /**
@@ -42,17 +52,16 @@ class ResourceController {
         if (!character) return;
         
         // Create basic stats based on character class
-        this.createBasicStats(character);
+        this.createBasicStats();
         
         // Create basic currencies
-        this.createBasicCurrencies(character);        
+        this.createBasicCurrencies();        
     }
     
     /**
      * Create basic stats for a character based on class
-     * @param {Object} character - The character object
      */
-    createBasicStats(character) {
+    createBasicStats() {
         // Add health stat
         const healthStat = this.addStat(
             'health',
@@ -89,9 +98,8 @@ class ResourceController {
     
     /**
      * Create basic currencies for a character
-     * @param {Object} character - The character object
      */
-    createBasicCurrencies(character) {
+    createBasicCurrencies() {
         // Add gold currency
         const goldCurrency = this.addCurrency(
             'gold',
@@ -356,6 +364,56 @@ class ResourceController {
         }
         
         return success;
+    }
+
+    /**
+     * Handle resource costs from actions
+     * @param {Object} data - Cost data
+     */
+    handleResourceCost(data) {
+        const { type, id, amount } = data;
+        
+        if (type === 'stat') {
+            // Subtract from stat
+            this.subtractFromResource(id, amount);
+        } else if (type === 'currency') {
+            // Subtract from currency
+            this.subtractFromResource(id, amount);
+        }
+    }
+
+    /**
+     * Handle resource rewards from actions
+     * @param {Object} data - Reward data
+     */
+    handleResourceReward(data) {
+        const { type, id, amount, message } = data;
+        
+        if (type === 'stat') {
+            // Add to stat
+            this.addToResource(id, amount);
+            
+            // Log the reward if it has a message
+            if (message) {
+                this.eventController.emit('log:entry-added', {
+                    message: message,
+                    important: true,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        } else if (type === 'currency') {
+            // Add to currency
+            this.addToResource(id, amount);
+            
+            // Log the reward if it has a message
+            if (message) {
+                this.eventController.emit('log:entry-added', {
+                    message: message,
+                    important: true,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        }
     }
     
     /**

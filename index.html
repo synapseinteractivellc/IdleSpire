@@ -13,6 +13,8 @@
             <div class="welcome-header">
                 <h1>IdleSpire</h1>
                 <p>Power Strives Towards the Pinnacle</p>
+                
+                <button id="wipe-button-1" class="header-button">Wipe</button>
             </div>
             <div class="card">
                 <h2>Create Your Character</h2>
@@ -80,7 +82,12 @@
                         <!-- Content changes based on active screen -->
                         <div id="main-screen" class="screen active">
                             <!-- Action buttons and upgrade buttons will generate here-->
-                            <p>Placeholder for Main</p>
+                            <div class="action-section">
+                                <h2>Available Actions</h2>
+                                <div class="action-buttons">
+                                    <!-- Action buttons will be generated here -->
+                                </div>
+                            </div>
                         </div>
                         <div id="skills-screen" class="screen hidden">
                             <!-- Skill buttons will generate here-->
@@ -100,10 +107,11 @@
                         </div>
                     </div>
                     <sidebar id="status-display">
-                      <div id="current-action">
-                        <h3>Current Action</h3>
-                        <p id="action-text">None</p>
-                      </div>
+                        <div id="current-action">
+                            <h3>Current Action</h3>
+                            <p id="action-text">None</p>
+                            <!-- Progress bar and cancel button will be added here dynamically -->
+                        </div>
                       <div id="stats-panel">
                         <!-- Stat Bar Display Populated from templates by JS -->
                       </div>
@@ -146,18 +154,39 @@
         </div>
     </template>
     <template id="action-button-template">
-        <button class="action-button" id="ACTION_ID" data-action-type="ACTION_TYPE" aria-label="ACTION_LABEL">
-            <span class="action-name">ACTION_NAME</span>
-            <span class="action-cooldown">COOLDOWN</span> 
+        <div class="action-button-container">
+            <button class="action-button" id="ACTION_ID" data-action-id="ACTION_TYPE" aria-label="ACTION_LABEL">
+                <span class="action-name">ACTION_NAME</span>
+                <div class="action-progress">
+                    <div class="action-progress-bar"></div>
+                    <span class="action-progress-text">0%</span>
+                </div>
+            </button>
             <div class="action-button-tooltip">
-                <span class="action-completions">COMPLETIONS</span>
-                <span class="action-current-percentage">CURRENT_PERCENTAGE</span>
+                <span class="action-completions">Completions: 0</span>
+                <span class="action-current-percentage">Progress: 0%</span>
                 <span class="action-description">ACTION_DESCRIPTION</span>
-                <span class="action-costs">COSTS</span>
-                <span class="action-rewards">REWARDS</span>
+                <div class="action-costs">COSTS</div>
+                <div class="action-rewards">REWARDS</div>
             </div>
-        </button>
-    </template>"
+        </div>
+    </template>
+    <template id="current-action-template">
+        <div class="current-action-container">
+          <div class="current-action-header">
+            <span class="current-action-name">ACTION_NAME</span>
+            <button class="cancel-button" aria-label="Cancel Action">✕</button>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: PROGRESS_PERCENT%;"></div>
+            <span class="progress-bar-text">PROGRESS_PERCENT%</span>
+          </div>
+          <div class="current-action-details">
+            <div class="current-action-costs">COSTS</div>
+            <div class="current-action-rewards">REWARDS</div>
+          </div>
+        </div>
+    </template>
     <template id="action-log-entry-template">
         <div class="action-log-entry">
           <div class="action-log-timestamp">TIMESTAMP</div>
