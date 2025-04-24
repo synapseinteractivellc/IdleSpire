@@ -330,35 +330,84 @@ class UIController {
     }
 
     /**
-     * Create action buttons for the UI
+     * Format costs into a readable string
+     * @param {Object} costs - The costs object from an action
+     * @returns {string} - Formatted costs string
      */
-    createActionButtons() {
-        const character = this.gameState.getActiveCharacter();
-        if (!character) return;
+    formatCosts(costs) {
+        if (!costs) return '';
         
-        // Get the main screen container
-        const mainScreen = document.getElementById('main-screen');
-        if (!mainScreen) return;
+        let result = '';
         
-        // Clear existing content
-        mainScreen.innerHTML = '';
+        // Format stat costs
+        if (costs.statCosts && Object.keys(costs.statCosts).length > 0) {
+            for (const statId in costs.statCosts) {
+                const cost = costs.statCosts[statId];
+                // Capitalize the first letter of the stat name
+                const statName = statId.charAt(0).toUpperCase() + statId.slice(1);
+                result += `${statName}: ${cost}/sec\n`;
+            }
+        }
         
-        // Create action section
-        const actionSection = document.createElement('div');
-        actionSection.className = 'action-section';
+        // Format currency costs
+        if (costs.currencyCosts && Object.keys(costs.currencyCosts).length > 0) {
+            for (const currencyId in costs.currencyCosts) {
+                const cost = costs.currencyCosts[currencyId];
+                // Capitalize the first letter of the currency name
+                const currencyName = currencyId.charAt(0).toUpperCase() + currencyId.slice(1);
+                result += `${currencyName}: ${cost}\n`;
+            }
+        }
         
-        // Add section title
-        const sectionTitle = document.createElement('h2');
-        sectionTitle.textContent = 'Available Actions';
-        actionSection.appendChild(sectionTitle);
+        return result || 'None';
+    }
+
+    /**
+     * Format rewards into a readable string
+     * @param {Object} rewards - The rewards object from an action
+     * @returns {string} - Formatted rewards string
+     */
+    formatRewards(rewards) {
+        if (!rewards) return '';
         
-        // Create action buttons container
-        const actionButtons = document.createElement('div');
-        actionButtons.className = 'action-buttons';
-        actionSection.appendChild(actionButtons);
+        let result = '';
         
-        // Add to main screen
-        mainScreen.appendChild(actionSection);
+        // Format stat rewards
+        if (rewards.statRewards && Object.keys(rewards.statRewards).length > 0) {
+            for (const statId in rewards.statRewards) {
+                const reward = rewards.statRewards[statId];
+                // Capitalize the first letter of the stat name
+                const statName = statId.charAt(0).toUpperCase() + statId.slice(1);
+                result += `${statName}: ${reward}\n`;
+            }
+        }
+        
+        // Format currency rewards
+        if (rewards.currencyRewards && Object.keys(rewards.currencyRewards).length > 0) {
+            for (const currencyId in rewards.currencyRewards) {
+                const reward = rewards.currencyRewards[currencyId];
+                // Capitalize the first letter of the currency name
+                const currencyName = currencyId.charAt(0).toUpperCase() + currencyId.slice(1);
+                result += `${currencyName}: ${reward}\n`;
+            }
+        }
+        
+        // Format skill experience rewards
+        if (rewards.skillExperience && Object.keys(rewards.skillExperience).length > 0) {
+            for (const skillId in rewards.skillExperience) {
+                const exp = rewards.skillExperience[skillId];
+                // Capitalize the first letter of the skill name
+                const skillName = skillId.charAt(0).toUpperCase() + skillId.slice(1);
+                result += `${skillName} XP: ${exp}\n`;
+            }
+        }
+        
+        // Mention if there are random rewards
+        if (rewards.randomRewards && rewards.randomRewards.length > 0) {
+            result += `Chance for bonus rewards!\n`;
+        }
+        
+        return result || 'None';
     }
 
     /**
@@ -381,25 +430,61 @@ class UIController {
         // Clone the template
         const button = template.content.cloneNode(true);
         
+        // Get the action object from the game's action controller if available
+        let action = null;
+        if (window.game && window.game.actionController) {
+            action = window.game.actionController.actions[actionData.id];
+        }
+        
         // Fill in the template
         button.querySelector('.action-button').id = `action-${actionData.id}`;
         button.querySelector('.action-button').setAttribute('data-action-id', actionData.id);
         button.querySelector('.action-button').setAttribute('aria-label', actionData.name);
         button.querySelector('.action-name').textContent = actionData.name;
+        button.querySelector('.action-name-tooltip').textContent = actionData.name;
         button.querySelector('.action-description').textContent = actionData.description;
         button.querySelector('.action-completions').textContent = 'Completions: 0';
-        button.querySelector('.action-current-percentage').textContent = 'Progress: 0';
-        if (actionData.costs) {
-            button.querySelector('.action-costs').textContent = actionData.costs;
+        button.querySelector('.action-current-percentage').textContent = 'Progress: 0%';
+        
+        // Format costs if we have the action object
+        if (action) {
+            const costsElement = button.querySelector('.action-costs');
+            if (costsElement) {
+                const formattedCosts = this.formatCosts({
+                    statCosts: action.statCosts,
+                    currencyCosts: action.currencyCosts
+                });
+                
+                if (formattedCosts && formattedCosts !== 'None') {
+                    costsElement.innerHTML = 'Costs:<br>' + formattedCosts.replace(/\n/g, '<br>');
+                } else {
+                    costsElement.remove();
+                }
+            }
+            
+            // Format rewards if we have the action object
+            const rewardsElement = button.querySelector('.action-rewards');
+            if (rewardsElement) {
+                const formattedRewards = this.formatRewards({
+                    statRewards: action.statRewards,
+                    currencyRewards: action.currencyRewards,
+                    skillExperience: action.skillExperience,
+                    randomRewards: action.randomRewards
+                });
+                
+                if (formattedRewards && formattedRewards !== 'None') {
+                    rewardsElement.innerHTML = 'Rewards:<br>' + formattedRewards.replace(/\n/g, '<br>');
+                } else {
+                    rewardsElement.remove();
+                }
+            }
         } else {
-            button.querySelector('.action-costs').textContent = '';
-            button.querySelector('.action-costs').remove;
-        }
-        if (actionData.rewards) {            
-            button.querySelector('.action-rewards').textContent = actionData.rewards;
-        } else {
-            button.querySelector('.action-rewards').textContent = '';
-            button.querySelector('.action-rewards').remove;
+            // If we don't have the action object, just remove the cost/reward elements
+            const costsElement = button.querySelector('.action-costs');
+            if (costsElement) costsElement.remove();
+            
+            const rewardsElement = button.querySelector('.action-rewards');
+            if (rewardsElement) rewardsElement.remove();
         }
         
         // Add event listener
@@ -580,7 +665,15 @@ class UIController {
         // Update percentage
         const percentage = button.querySelector('.action-progress-text');
         if (percentage) {
-            percentage.textContent = `${Math.floor(progressData.progress)}%`;
+            if (progressData.progress <= 0 || progressData.progress === null ) {
+                percentage.textContent = `0%`;
+            } else {
+                percentage.textContent = `${Math.floor(progressData.progress)}%`;
+            }
+            
         }
+
+        
+        button.querySelector('.action-current-percentage').textContent = `Progress: ${Math.floor(progressData.progress)}%`;
     }
 }

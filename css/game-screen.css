@@ -164,6 +164,11 @@
     transform: translateX(-50%) translateY(-10px); /* Slight upward movement */
 }
 
+.action-name-tooltip {
+    color: var(--color-text-primary);
+    font-size: 16px;
+}
+
 .action-completions, .action-current-percentage {
     color: var(--color-text-secondary);
     font-size: 12px;
