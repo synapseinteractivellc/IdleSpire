@@ -94,7 +94,8 @@ class UIController {
         
         // Listen for action completed
         this.eventController.on('action:completed', (data) => {
-            this.showActionCompletionMessage(data);
+            this.showActionCompletionMessage(data);            
+            this.updateActionCompletion(data);
             if (!data.autoRestarted) {
                 this.clearActiveActionHighlight();
                 this.clearCurrentAction();
@@ -480,11 +481,13 @@ class UIController {
             }
         } else {
             // If we don't have the action object, just remove the cost/reward elements
+            /*
             const costsElement = button.querySelector('.action-costs');
             if (costsElement) costsElement.remove();
             
             const rewardsElement = button.querySelector('.action-rewards');
             if (rewardsElement) rewardsElement.remove();
+            */
         }
         
         // Add event listener
@@ -625,7 +628,7 @@ class UIController {
     }
 
     /**
-     * Show a message for action failure
+     * Show a message for action failure and preserve progress display
      * @param {Object} data - Failure data
      */
     showActionFailedMessage(data) {
@@ -634,6 +637,34 @@ class UIController {
                 message: data.message,
                 type: 'error'
             });
+        }
+        // When an action fails due to insufficient resources,
+        // update the UI to show the last progress percentage
+        // instead of resetting to 0
+        if (data.progress !== undefined) {
+            const button = document.getElementById(`action-${data.id}`);
+            if (button) {
+                // Preserve progress bar width
+                const progressBar = button.querySelector('.action-progress-bar');
+                if (progressBar) {
+                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
+                    progressBar.style.width = `${progressValue}%`;
+                }
+                
+                // Preserve progress text
+                const progressText = button.querySelector('.action-progress-text');
+                if (progressText) {
+                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
+                    progressText.textContent = `${Math.floor(progressValue)}%`;
+                }
+                
+                // Preserve tooltip progress text
+                const tooltipProgress = button.querySelector('.action-current-percentage');
+                if (tooltipProgress) {
+                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
+                    tooltipProgress.textContent = `Progress: ${Math.floor(progressValue)}%`;
+                }
+            }
         }
     }
 
@@ -656,24 +687,32 @@ class UIController {
         const button = document.getElementById(`action-${progressData.id}`);
         if (!button) return;
         
+        // Get the progress value, ensuring it's a valid number
+        const progressValue = isNaN(progressData.progress) ? 0 : progressData.progress;
+        
         // Update progress bar if it exists
         const progressBar = button.querySelector('.action-progress-bar');
         if (progressBar) {
-            progressBar.style.width = `${progressData.progress}%`;
+            progressBar.style.width = `${progressValue}%`;
         }
         
         // Update percentage
         const percentage = button.querySelector('.action-progress-text');
         if (percentage) {
-            if (progressData.progress <= 0 || progressData.progress === null ) {
-                percentage.textContent = `0%`;
-            } else {
-                percentage.textContent = `${Math.floor(progressData.progress)}%`;
-            }
-            
+            percentage.textContent = `${Math.floor(progressValue)}%`;
         }
-
         
-        button.querySelector('.action-current-percentage').textContent = `Progress: ${Math.floor(progressData.progress)}%`;
+        // Also update the tooltip percentage
+        const tooltipPercentage = button.querySelector('.action-current-percentage');
+        if (tooltipPercentage) {
+            tooltipPercentage.textContent = `Progress: ${Math.floor(progressValue)}%`;
+        }
+    }
+
+    updateActionCompletion(completionData) {
+        const button = document.getElementById(`action-${completionData.id}`);
+        if (!button) return;
+
+        button.querySelector('.action-completions').textContent = `Completions: ${completionData.completionCount}`;
     }
 }

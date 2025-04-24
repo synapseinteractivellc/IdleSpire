@@ -240,8 +240,7 @@ class ActionController {
     }
     
     /**
-     * Update all actions based on elapsed time
-     * @param {number} deltaTime - Time elapsed in milliseconds
+     * Update the action controller to preserve progress when stopping due to insufficient resources
      */
     updateActions(deltaTime) {
         if (!this.activeAction) {
@@ -263,7 +262,6 @@ class ActionController {
         
         // Apply costs
         this.applyCosts(result.costs);
-        
         
         // Apply rewards if any
         if (result.rewards) {
@@ -320,12 +318,13 @@ class ActionController {
         
         // If action failed due to insufficient resources, start rest action
         if (result.insufficientResources && result.insufficientResources.length > 0) {
-            // Log the failure
+            // Log the failure but include the current progress in the event
             this.eventController.emit('action:failed', {
                 id: result.id,
                 name: result.name,
                 message: result.message,
-                insufficientResources: result.insufficientResources
+                insufficientResources: result.insufficientResources,
+                progress: result.progress // Add the current progress here
             });
             
             // Start rest action

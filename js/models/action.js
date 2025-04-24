@@ -84,7 +84,7 @@ class Action {
             return {
                 id: this.id,
                 completed: false,
-                timeSpent: 0,
+                progress: this.currentProgress,
                 message: this.messages.cancel
             };
         }
@@ -107,6 +107,7 @@ class Action {
             id: this.id,
             completed: completed,
             timeSpent: timeSpent,
+            progress: this.currentProgress,
             totalTimeSpent: this.totalTimeSpent,
             completionCount: this.completionCount,
             rewards: completed ? this.calculateRewards() : null,
@@ -213,6 +214,7 @@ class Action {
             progress: this.currentProgress,
             progressChange: this.currentProgress - oldProgress,
             completed: completed,
+            completionCount: this.completionCount,
             costs: costs,
             rewards: completed ? completionRewards : progressRewards,
             message: completed ? this.messages.complete : this.messages.progress
