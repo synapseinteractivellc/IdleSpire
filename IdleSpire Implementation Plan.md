@@ -49,8 +49,8 @@ The game follows an MVC (Model-View-Controller) architecture:
 - [X] Create `ResourceController` for managing resources
 
 #### 2.2 Character System
-- [~] Implement `Character` class (placeholder created, needs implementation)
-- [~] Implement `CharacterController` (placeholder created, needs implementation)
+- [x] Implement `Character` class (placeholder created, needs implementation)
+- [x] Implement `CharacterController` (placeholder created, needs implementation)
 - [X] Create character creation and initialization process
 
 #### 2.3 Game Loop
