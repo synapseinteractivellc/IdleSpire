@@ -161,8 +161,6 @@ class ActionController {
      * @returns {boolean} Whether the action was successfully started
      */
     startAction(actionId) {
-        console.log(actionId);
-        console.log(this.activeAction);
         const action = this.actions[actionId];
         if (!action || !action.canStart()) {
             return false;
@@ -176,7 +174,6 @@ class ActionController {
         
         // Stop current action if there is one
         if (this.activeAction) {
-            console.log(this.activeAction);
             this.stopAction();
         }
         
@@ -210,11 +207,9 @@ class ActionController {
             return false;
         }
         
-        console.log(this.activeAction);
         const result = this.activeAction.stop();
         const action = this.activeAction;
         this.activeAction = null;
-        console.log(result);
         
         // Update character data
         this.updateCharacterActionData(action);
@@ -238,8 +233,7 @@ class ActionController {
         if (!this.restAction) {
             console.log('No rest action registered.');
             return false;
-        }
-        console.log("Starting rest action: ", this.restAction.id);
+        };
         this.startAction(this.restAction.id);
         
         return false;
@@ -269,6 +263,7 @@ class ActionController {
         
         // Apply costs
         this.applyCosts(result.costs);
+        
         
         // Apply rewards if any
         if (result.rewards) {

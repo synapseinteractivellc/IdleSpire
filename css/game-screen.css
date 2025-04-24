@@ -84,7 +84,6 @@
     text-align: left;
     transition: background-color var(--transition-fast), transform var(--transition-fast);
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
@@ -140,23 +139,29 @@
 }
 
 .action-button-tooltip {
-    position: absolute;
-    top: -10px;
-    left: 60%;
+    position: absolute; /* Change back to absolute */
+    top: 70%; /* Position above the button */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Ensure it's centered */
+    max-width: 250px;
+    width: max-content;
     background-color: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     padding: var(--space-md);
-    width: 250px;
-    z-index: 100;
-    display: none;
-    flex-direction: column;
-    gap: var(--space-sm);
-    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 
+        opacity 0.2s ease-in-out, 
+        visibility 0.2s ease-in-out,
+        transform 0.2s ease-in-out;
 }
 
 .action-button-container:hover .action-button-tooltip {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-10px); /* Slight upward movement */
 }
 
 .action-completions, .action-current-percentage {

@@ -387,10 +387,20 @@ class UIController {
         button.querySelector('.action-button').setAttribute('aria-label', actionData.name);
         button.querySelector('.action-name').textContent = actionData.name;
         button.querySelector('.action-description').textContent = actionData.description;
-        button.querySelector('.action-completions').textContent = 0;
+        button.querySelector('.action-completions').textContent = 'Completions: 0';
         button.querySelector('.action-current-percentage').textContent = 'Progress: 0';
-        button.querySelector('.action-costs').textContent = actionData.costs;
-        button.querySelector('.action-rewards').textContent = actionData.rewards;
+        if (actionData.costs) {
+            button.querySelector('.action-costs').textContent = actionData.costs;
+        } else {
+            button.querySelector('.action-costs').textContent = '';
+            button.querySelector('.action-costs').remove;
+        }
+        if (actionData.rewards) {            
+            button.querySelector('.action-rewards').textContent = actionData.rewards;
+        } else {
+            button.querySelector('.action-rewards').textContent = '';
+            button.querySelector('.action-rewards').remove;
+        }
         
         // Add event listener
         button.querySelector('.action-button').addEventListener('click', () => {

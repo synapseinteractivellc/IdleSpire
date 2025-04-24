@@ -112,7 +112,6 @@ class Action {
             rewards: completed ? this.calculateRewards() : null,
             message: completed ? this.messages.complete : this.messages.cancel
         };
-        console.log(result);
         
         this.isActive = false;
         
