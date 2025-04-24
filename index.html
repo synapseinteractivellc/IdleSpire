@@ -162,21 +162,18 @@
     <template id="action-button-template">
         <div class="action-button-container">
             <button class="action-button" id="ACTION_ID" data-action-id="ACTION_TYPE" aria-label="ACTION_LABEL">
-                <span class="action-name">ACTION_NAME</span>
-                <div class="action-progress">
-                    <div class="action-progress-bar"></div>
-                    <span class="action-progress-text">0%</span>
-                </div>
-                <div class="action-button-tooltip">
-                    <span class="action-name-tooltip">ACTION_NAME</span><br>
-                    <span class="action-completions">Completions: 0</span><br>
-                    <span class="action-current-percentage">Progress: 0%</span><br>
-                    <span class="action-description">ACTION_DESCRIPTION</span><br>
-                    <div class="action-costs">COSTS</div><br>
-                    <div class="action-rewards">REWARDS</div>
-                </div>
+                <div class="action-button-fill" data-progress="low"></div>
+                <span class="action-name">ACTION_NAME</span>                
             </button>
-            
+            <!-- Tooltip moved outside the button -->
+            <div class="action-button-tooltip">
+                <span class="action-name-tooltip">ACTION_NAME</span><br>
+                <span class="action-completions">Completions: 0</span><br>
+                <span class="action-current-percentage">Progress: 0%</span><br>
+                <span class="action-description">ACTION_DESCRIPTION</span><br>
+                <div class="action-costs">COSTS</div><br>
+                <div class="action-rewards">REWARDS</div>
+            </div>
         </div>
     </template>
     <template id="current-action-template">

@@ -443,6 +443,15 @@ class UIController {
             action = window.game.actionController.actions[actionData.id];
         }
         
+        // Create and add the button fill element
+        const fillElement = document.createElement('div');
+        fillElement.className = 'action-button-fill';
+        fillElement.setAttribute('data-progress', 'low');
+        
+        // Insert the fill element as the first child of the button
+        const actionButton = button.querySelector('.action-button');
+        actionButton.insertBefore(fillElement, actionButton.firstChild);
+
         // Fill in the template
         button.querySelector('.action-button').id = `action-${actionData.id}`;
         button.querySelector('.action-button').setAttribute('data-action-id', actionData.id);
@@ -637,30 +646,32 @@ class UIController {
                 type: 'error'
             });
         }
+        
         // When an action fails due to insufficient resources,
         // update the UI to show the last progress percentage
-        // instead of resetting to 0
         if (data.progress !== undefined) {
             const button = document.getElementById(`action-${data.id}`);
             if (button) {
-                // Preserve progress bar width
-                const progressBar = button.querySelector('.action-progress-bar');
-                if (progressBar) {
-                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
-                    progressBar.style.width = `${progressValue}%`;
-                }
+                const progressValue = isNaN(data.progress) ? 0 : data.progress;                
                 
-                // Preserve progress text
-                const progressText = button.querySelector('.action-progress-text');
-                if (progressText) {
-                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
-                    progressText.textContent = `${Math.floor(progressValue)}%`;
+                // Preserve fill element width
+                const fillElement = button.querySelector('.action-button-fill');
+                if (fillElement) {
+                    fillElement.style.width = `${progressValue}%`;
+                    
+                    // Update color based on progress
+                    if (progressValue < 33) {
+                        fillElement.setAttribute('data-progress', 'low');
+                    } else if (progressValue < 66) {
+                        fillElement.setAttribute('data-progress', 'medium');
+                    } else {
+                        fillElement.setAttribute('data-progress', 'high');
+                    }
                 }
-                
-                // Preserve tooltip progress text
-                const tooltipProgress = button.querySelector('.action-current-percentage');
+                                
+                // Update tooltip progress text (now outside the button)
+                const tooltipProgress = button.closest('.action-button-container').querySelector('.action-current-percentage');
                 if (tooltipProgress) {
-                    const progressValue = isNaN(data.progress) ? 0 : data.progress;
                     tooltipProgress.textContent = `Progress: ${Math.floor(progressValue)}%`;
                 }
             }
@@ -687,22 +698,29 @@ class UIController {
         if (!button) return;
         
         // Get the progress value, ensuring it's a valid number
-        const progressValue = isNaN(progressData.progress) ? 0 : progressData.progress;
+        let progressValue = isNaN(progressData.progress) ? 0 : progressData.progress;
         
-        // Update progress bar if it exists
-        const progressBar = button.querySelector('.action-progress-bar');
-        if (progressBar) {
-            progressBar.style.width = `${progressValue}%`;
+        // Important: Adjust progress for visual purposes to ensure it reaches 100%
+        // If progress is over 95%, visually show it as 100% to ensure it looks complete
+        const visualProgress = progressValue > 95 ? 100 : progressValue;
+                
+        // Update fill element if it exists
+        const fillElement = button.querySelector('.action-button-fill');
+        if (fillElement) {
+            fillElement.style.width = `${visualProgress}%`;
+            
+            // Update the data-progress attribute to change the color based on progress
+            if (progressValue < 33) {
+                fillElement.setAttribute('data-progress', 'low');
+            } else if (progressValue < 66) {
+                fillElement.setAttribute('data-progress', 'medium');
+            } else {
+                fillElement.setAttribute('data-progress', 'high');
+            }
         }
-        
-        // Update percentage
-        const percentage = button.querySelector('.action-progress-text');
-        if (percentage) {
-            percentage.textContent = `${Math.floor(progressValue)}%`;
-        }
-        
-        // Also update the tooltip percentage
-        const tooltipPercentage = button.querySelector('.action-current-percentage');
+                
+        // Also update the tooltip percentage (now outside the button)
+        const tooltipPercentage = button.closest('.action-button-container').querySelector('.action-current-percentage');
         if (tooltipPercentage) {
             tooltipPercentage.textContent = `Progress: ${Math.floor(progressValue)}%`;
         }
@@ -715,8 +733,15 @@ class UIController {
     updateActionCompletion(completionData) {
         const button = document.getElementById(`action-${completionData.id}`);
         if (!button) return;
-
-        button.querySelector('.action-completions').textContent = `Completions: ${completionData.completionCount}`;
+    
+        // Get the action button container (parent of button)
+        const container = button.closest('.action-button-container');
+        
+        // Update completions count in tooltip (now outside the button)
+        const completionsElement = container.querySelector('.action-completions');
+        if (completionsElement) {
+            completionsElement.textContent = `Completions: ${completionData.completionCount}`;
+        }
     }
 
     /**
@@ -727,8 +752,11 @@ class UIController {
         const button = document.getElementById(`action-${actionData.id}`);
         if (!button) return;
         
+        // Get the action button container (parent of button)
+        const container = button.closest('.action-button-container');
+        
         // Update tooltip with costs
-        const costsElement = button.querySelector('.action-costs');
+        const costsElement = container.querySelector('.action-costs');
         if (costsElement) {
             const formattedCosts = this.formatCosts({
                 statCosts: actionData.statCosts,
@@ -739,7 +767,7 @@ class UIController {
         }
         
         // Update tooltip with rewards
-        const rewardsElement = button.querySelector('.action-rewards');
+        const rewardsElement = container.querySelector('.action-rewards');
         if (rewardsElement) {
             const formattedRewards = this.formatRewards({
                 statRewards: actionData.statRewards,
@@ -753,12 +781,12 @@ class UIController {
         
         // Update completion count if available
         if (actionData.completionCount !== undefined) {
-            const completionsElement = button.querySelector('.action-completions');
+            const completionsElement = container.querySelector('.action-completions');
             if (completionsElement) {
                 completionsElement.textContent = `Completions: ${actionData.completionCount}`;
             }
         }
-
+    
         this.updateActionProgress(actionData);
     }
 }

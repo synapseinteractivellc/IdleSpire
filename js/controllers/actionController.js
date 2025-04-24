@@ -100,7 +100,7 @@ class ActionController {
         });
 
         this.createAction('rest_abandoned', 'Rest in Abandoned Building', 'Find shelter and rest in an abandoned building.', {
-            baseDuration: 1000, // 10 seconds
+            baseDuration: 5000, // 5 seconds
             unlocked: true,
             autoRestart: false,
             isRestAction: true,
@@ -520,7 +520,7 @@ class ActionController {
                 });
             } else if (actionId === 'rest_abandoned') {
                 this.createAction('rest_abandoned', 'Rest in Abandoned Building', 'Find shelter and rest in an abandoned building.', {
-                    baseDuration: 1000,
+                    baseDuration: 5000,
                     isRestAction: true,
                     autoRestart: false,
                     statRewards: {
