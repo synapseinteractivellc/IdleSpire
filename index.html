@@ -65,20 +65,39 @@
                 </header>
                 <nav>
                     <ul id="game-nav">
-                        <li><button id="main" class="nav-button" aria-label="Main Screen">Main</button></li>
-                        <li><button id="skills" class="nav-button" aria-label="View Skills">Skills</button></li>
-                        <li><button id="house" class="nav-button" aria-label="View House">House</button></li>
-                        <li><button id="quests" class="nav-button" aria-label="View Quests">Quests</button></li>
-                        <li><button id="character" class="nav-button" aria-label="Character Screen">Character</button></li>
+                        <li><button id="main" class="nav-button active" aria-label="Main Screen" data-screen="main">Main</button></li>
+                        <li><button id="skills" class="nav-button" aria-label="View Skills" data-screen="skills">Skills</button></li>
+                        <li><button id="house" class="nav-button" aria-label="View House" data-screen="house">House</button></li>
+                        <li><button id="quests" class="nav-button" aria-label="View Quests" data-screen="quests">Quests</button></li>
+                        <li><button id="character" class="nav-button" aria-label="Character Screen" data-screen="character">Character</button></li>
                     </ul>
                 </nav>
                 <div id="game-content">
                     <sidebar id="currency-panel">
                       <!-- Currency Display Populated from templates by JS -->
                     </sidebar>
-                    <div id="main-content" class="game-section active">
-                      <h2>Welcome to the World of IdleSpire!</h2>
-                      <p>Explore, gather resources, and build your empire.</p>
+                    <div id="main-content" class="game-section">                                                   
+                        <!-- Content changes based on active screen -->
+                        <div id="main-screen" class="screen active">
+                            <!-- Action buttons and upgrade buttons will generate here-->
+                            <p>Placeholder for Main</p>
+                        </div>
+                        <div id="skills-screen" class="screen hidden">
+                            <!-- Skill buttons will generate here-->
+                            <p>Placeholder for Skills</p>
+                        </div>
+                        <div id="house-screen" class="screen hidden">
+                            <!-- House content will generate here-->
+                            <p>Placeholder for House</p>
+                        </div>
+                        <div id="quests-screen" class="screen hidden">
+                            <!-- Quests content will generate here-->
+                            <p>Placeholder for Quests</p>
+                        </div>
+                        <div id="character-screen" class="screen hidden">
+                            <!-- Character stats and info will generate here-->
+                            <p>Placeholder for Character</p>
+                        </div>
                     </div>
                     <sidebar id="status-display">
                       <div id="current-action">
@@ -126,6 +145,19 @@
           </div>
         </div>
     </template>
+    <template id="action-button-template">
+        <button class="action-button" id="ACTION_ID" data-action-type="ACTION_TYPE" aria-label="ACTION_LABEL">
+            <span class="action-name">ACTION_NAME</span>
+            <span class="action-cooldown">COOLDOWN</span> 
+            <div class="action-button-tooltip">
+                <span class="action-completions">COMPLETIONS</span>
+                <span class="action-current-percentage">CURRENT_PERCENTAGE</span>
+                <span class="action-description">ACTION_DESCRIPTION</span>
+                <span class="action-costs">COSTS</span>
+                <span class="action-rewards">REWARDS</span>
+            </div>
+        </button>
+    </template>"
     <template id="action-log-entry-template">
         <div class="action-log-entry">
           <div class="action-log-timestamp">TIMESTAMP</div>
@@ -151,7 +183,6 @@
     <!-- Controllers -->
     <script src="./js/controllers/saveController.js"></script>
     <script src="./js/controllers/uiController.js"></script>
-    <script src="./js/controllers/gameController.js"></script>
     <script src="./js/controllers/characterController.js"></script>
     <script src="./js/controllers/actionController.js"></script>
     <script src="./js/controllers/skillController.js"></script>

@@ -7,7 +7,11 @@ class UIController {
         this.statContainers = {};
         this.currencyContainers = {};
         
-        // Reference to where stats will be displayed
+        // Reference to the navigation buttons and screens
+        this.navButtons = document.querySelectorAll('#game-nav .nav-button');
+        this.screens = document.querySelectorAll('.screen');
+
+        // Reference to where stats and currency will be displayed
         this.statsPanel = document.getElementById('stats-panel');
         this.currencyPanel = document.getElementById('currency-panel');
         
@@ -56,6 +60,35 @@ class UIController {
         // document.getElementById('some-button').addEventListener('click', () => {
         //     this.eventController.emit('ui:button-clicked', { buttonId: 'some-button' });
         // });
+
+        // Set up navigation button listeners
+        this.navButtons.forEach(button => {
+            button.addEventListener('click', (event) => this.handleNavigation(event));
+        });
+    }
+
+    /**
+     * Handle navigation button clicks
+     * @param {Event} event - The click event
+     */
+    handleNavigation(event) {
+        const button = event.target;
+        const targetScreenId = button.dataset.screen;
+
+        // Update active button
+        this.navButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // Show the target screen and hide others
+        this.screens.forEach(screen => {
+            if (screen.id === `${targetScreenId}-screen`) {
+                screen.classList.remove('hidden');
+                screen.classList.add('active');
+            } else {
+                screen.classList.add('hidden');
+                screen.classList.remove('active');
+            }
+        });
     }
     
     /**

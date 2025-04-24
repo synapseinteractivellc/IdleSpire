@@ -43,7 +43,7 @@ class ResourceController {
         if (!character) return;
         
         // Create basic stats based on character class
-        this.createBasicStats(character, characterData.class);
+        this.createBasicStats(character);
         
         // Create basic currencies
         this.createBasicCurrencies(character);

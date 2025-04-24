@@ -12,12 +12,11 @@ class Game {
         // Create controllers
         this.uiController = new UIController(this.eventController);
         this.resourceController = new ResourceController(this.eventController, this.gameState);
-        this.gameController = new GameController(this.eventController, this.gameState);
         this.saveController = new SaveController(this.eventController, this.gameState);
         this.actionLogController = new ActionLogController(this.eventController);
         
         // Create test controller if in development mode
-        this.testEventController = new TestEventController(this.eventController);
+        // this.testEventController = new TestEventController(this.eventController);
         
         // Game tick variables
         this.lastUpdate = Date.now();
@@ -36,12 +35,11 @@ class Game {
         // Initialize controllers
         this.uiController.init();
         this.resourceController.init();
-        this.gameController.init();
         this.saveController.init();
         this.actionLogController.init();
         
         // Initialize test controller in development mode
-        this.testEventController.init();
+        // this.testEventController.init();
         
         console.log('Game initialization complete');
         
@@ -199,7 +197,7 @@ class Game {
         this.showGameScreen();
         
         // Log a test event
-        this.testEventController.logMessage('Game state initialized with character: ' + characterData.name);
+        // this.testEventController.logMessage('Game state initialized with character: ' + characterData.name);
     }
 }
 
