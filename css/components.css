@@ -1,0 +1,387 @@
+/* components.css - Reusable UI components */
+
+/* Button Styles */
+.header-button {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-ui);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.header-button:hover {
+    transform: translateY(-2px);
+}
+
+.header-button:active {
+    transform: translateY(0);
+}
+
+#save-button {
+    background-color: var(--color-accent-success);
+    color: white;
+}
+
+#save-button:hover {
+    background-color: hsl(145, 60%, 35%);
+}
+
+#wipe-button, #wipe-button-1 {
+    background-color: var(--color-accent-danger);
+    color: white;
+}
+
+#wipe-button:hover, #wipe-button-1:hover {
+    background-color: hsl(0, 70%, 45%);
+}
+
+.btn-primary {
+    background: var(--color-accent-primary);
+    color: var(--color-white);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 16px;
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all var(--transition-medium);
+    cursor: pointer;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--color-accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover::before {
+    transform: translateX(0);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Nav Button Styles */
+.nav-button {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    font-size: 14px;
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color var(--transition-fast);
+}
+
+.nav-button:hover {
+    background-color: var(--color-bg-element-hover);
+}
+
+.nav-button.active {
+    background: var(--gradient-selected);
+}
+
+/* Card Component */
+.card {
+    color: var(--color-text-primary);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-medium);
+    padding: var(--space-xl);
+    width: 45%;
+    max-width: 600px;
+    min-width: 320px;
+    margin: 40px auto;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-primary-hover));
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 28px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: var(--font-primary);
+    font-weight: 700;
+}
+
+/* Form Components */
+.form-group {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-family: var(--font-ui);
+}
+
+input[type="text"] {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-sm);
+    padding: 12px 15px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    font-size: 16px;
+    font-family: var(--font-ui);
+    transition: all var(--transition-fast);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]:hover {
+    border-color: var(--color-border-light);
+}
+
+input[type="text"]:focus {
+    border-color: var(--color-accent-primary);
+    background-color: rgba(0, 0, 0, 0.3);
+    outline: none;
+    box-shadow: 0 0 0 2px hsla(210, 70%, 50%, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-actions {
+    margin-top: var(--space-xl);
+}
+
+/* Stat Components */
+.stat-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-sm);
+    position: relative;
+}
+
+.stat-label {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: var(--font-ui);
+}
+
+.stat-bar-container {
+    width: 100%;
+    height: 24px;
+    background-color: var(--color-bg-element);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--color-border-medium);
+}
+
+.stat-bar {
+    height: 100%;
+    width: 50%;
+    transition: width var(--transition-medium);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-values {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    font-family: var(--font-ui);
+}
+
+.stat-tooltip {
+    position: absolute;
+    top: -10px;
+    left: 60%;
+    transform: translateX(-50%);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+    white-space: nowrap;
+    border: 1px solid var(--color-border-medium);
+    z-index: 100;
+    font-family: var(--font-ui);
+}
+
+.stat-container:hover .stat-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Stat Bar Types */
+.health-bar {
+    background: linear-gradient(to right, hsl(0, 70%, 45%), var(--color-health));
+}
+
+.stamina-bar {
+    background: linear-gradient(to right, hsl(145, 60%, 35%), var(--color-stamina));
+}
+
+.mana-bar {
+    background: linear-gradient(to right, hsl(210, 70%, 45%), var(--color-mana));
+}
+
+.rage-bar {
+    background: linear-gradient(to right, hsl(280, 50%, 45%), var(--color-rage));
+}
+
+.stat-bar.low {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Currency Component */
+.currency-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-medium);
+    margin-bottom: 6px;
+    position: relative;
+    transition: background-color var(--transition-fast);
+}
+
+.currency-container:hover {
+    background-color: var(--color-bg-element);
+}
+
+.currency-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.currency-name {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-family: var(--font-ui);
+}
+
+.currency-values {
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-family: var(--font-ui);
+}
+
+.currency-tooltip {
+    position: absolute;
+    top: -10px;
+    left: 60%;
+    transform: translateX(-50%);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+    white-space: nowrap;
+    border: 1px solid var(--color-border-medium);
+    z-index: 1000;
+    font-family: var(--font-ui);
+}
+
+.currency-container:hover .currency-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Currency Types */
+.gold-currency .currency-name {
+    color: hsl(48, 100%, 67%);
+}
+
+.gem-currency .currency-name {
+    color: hsl(280, 50%, 70%);
+}
+
+.wood-currency .currency-name {
+    color: hsl(25, 70%, 40%);
+}
+
+/* Action Log Component */
+.action-log-entry {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-medium);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-secondary);
+}
+
+.action-log-entry.important {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+}
+
+.action-log-timestamp {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 3px;
+    font-family: var(--font-ui);
+}

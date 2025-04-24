@@ -1,0 +1,127 @@
+/* layout.css - Main layout structures */
+
+/* Header Styles */
+header, .game-header {
+    background: var(--gradient-header);
+    color: var(--color-text-primary);
+    padding: var(--space-md) var(--space-lg);
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: var(--space-md);
+}
+
+.header-content {
+    flex: 1;
+}
+
+#game-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#game-character-info {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.header-disclaimer {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    flex: 1;
+}
+
+/* Navigation Styles */
+nav {
+    background-color: var(--color-bg-secondary);
+    width: 100%;
+    position: relative;
+}
+
+#game-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#game-nav li:first-child {
+    margin-left: 13%;
+}
+
+/* Game Content Layout */
+#game-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#game {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#game-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar and Content Styles */
+#currency-panel {
+    width: 13%;
+    overflow-y: auto;
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border-right: 1px solid var(--color-border-medium);
+}
+
+#main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+}
+
+#status-display {
+    width: 13%;
+    overflow-y: auto;
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border-left: 1px solid var(--color-border-medium);
+}
+
+#action-log {
+    width: 13%;
+    overflow-y: auto;
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    border-left: 1px solid var(--color-border-medium);
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    text-align: center;
+    padding: var(--space-sm);
+    border-top: 1px solid var(--color-border-dark);
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+}
+
+footer a {
+    color: var(--color-accent-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+footer a:hover {
+    color: var(--color-accent-primary-hover);
+    text-decoration: underline;
+}

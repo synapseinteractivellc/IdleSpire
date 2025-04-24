@@ -1,0 +1,80 @@
+/* utilities.css - Helper classes and responsive design */
+
+/* Container Helpers */
+#welcome-container, #game-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    #game-nav li:first-child {
+        margin-left: 0;
+    }
+    
+    #game-content {
+        flex-wrap: wrap;
+    }
+    
+    #currency-panel, #status-display, #action-log {
+        width: 20%;
+    }
+    
+    #main-content {
+        width: 60%;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-header {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .header-content, .header-buttons {
+        text-align: center;
+        margin: var(--space-sm) 0;
+    }
+    
+    #game-content {
+        flex-direction: column;
+    }
+    
+    #currency-panel, #main-content, #status-display, #action-log {
+        width: 100%;
+        max-height: none;
+        border: none;
+        border-bottom: 1px solid var(--color-border-medium);
+    }
+    
+    #currency-panel {
+        order: 2;
+    }
+    
+    #main-content {
+        order: 1;
+    }
+    
+    #status-display {
+        order: 3;
+    }
+    
+    #action-log {
+        order: 4;
+    }
+    
+    .class-selection {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .class-choice {
+        max-width: 100%;
+        margin-bottom: var(--space-sm);
+    }
+    
+    .card {
+        width: 90%;
+    }
+}

@@ -1,0 +1,116 @@
+/* welcome-screen.css - Welcome and character creation screen */
+
+#welcome-container {
+    background-color: var(--color-bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.welcome-header h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-white));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+}
+
+.welcome-header p {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* Class Selection Styles */
+.class-selection {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
+}
+
+.class-choice {
+    flex: 1;
+    max-width: 200px;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-tertiary);
+    transition: all var(--transition-medium);
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.class-choice:hover {
+    background-color: var(--color-bg-element);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.class-choice.active {
+    border-color: var(--color-accent-primary);
+    background: var(--gradient-selected);
+    box-shadow: 0 0 15px rgba(100, 155, 255, 0.2);
+}
+
+.class-choice.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-primary-hover));
+}
+
+.class-name {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-primary);
+    color: var(--color-white);
+    letter-spacing: 0.5px;
+    transition: all var(--transition-medium);
+}
+
+.class-choice.active .class-name {
+    color: var(--color-accent-primary-hover);
+    text-shadow: 0 0 10px rgba(100, 155, 255, 0.3);
+}
+
+.class-desc {
+    display: block;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    font-family: var(--font-secondary);
+    transition: all var(--transition-medium);
+}
+
+.class-choice.active .class-desc {
+    color: var(--color-text-primary);
+}
+
+.character-info {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin: 25px 0;
+    font-style: italic;
+    line-height: 1.6;
+    font-family: var(--font-secondary);
+    border-left: 3px solid var(--color-accent-primary);
+    color: var(--color-text-secondary);
+}
