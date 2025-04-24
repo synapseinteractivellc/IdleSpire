@@ -49,8 +49,8 @@ The game follows an MVC (Model-View-Controller) architecture:
 - [X] Create `ResourceController` for managing resources
 
 #### 2.2 Character System
-- [x] Implement `Character` class (placeholder created, needs implementation)
-- [x] Implement `CharacterController` (placeholder created, needs implementation)
+- [X] Implement `Character` class (placeholder created, needs implementation)
+- [X] Implement `CharacterController` (placeholder created, needs implementation)
 - [X] Create character creation and initialization process
 
 #### 2.3 Game Loop
@@ -59,9 +59,9 @@ The game follows an MVC (Model-View-Controller) architecture:
 - [X] Set up offline progression calculation
 
 #### 2.4 Action System
-- [~] Implement `Action` class (placeholder created, needs implementation)
-- [~] Implement `ActionController` (placeholder created, needs implementation)
-- [ ] Create UI for selecting and performing actions
+- [X] Implement `Action` class (placeholder created, needs implementation)
+- [X] Implement `ActionController` (placeholder created, needs implementation)
+- [X] Create UI for selecting and performing actions
 
 ## Phase 3: Game Content (Week 3)
 

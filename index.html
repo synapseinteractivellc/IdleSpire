@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/welcome-screen.css">
     <link rel="stylesheet" href="./css/game-screen.css">
+    <link rel="stylesheet" href="./css/skills-screen.css">
     <link rel="stylesheet" href="./css/utilities.css">
     <link rel="icon" href="./media/tower.ico" type="image/x-icon">
     <title>IdleSpire</title>
@@ -198,6 +199,38 @@
           <div class="action-log-message">ACTION_MESSAGE</div>
         </div>
     </template>
+
+    <template id="skill-template">
+        <div class="skill-container">
+          <div class="skill-header">
+            <span class="skill-name">SKILL_NAME</span>
+            <span class="skill-level">Level CURRENT_LEVEL/MAX_LEVEL</span>
+          </div>
+          <div class="skill-bar-container">
+            <div class="skill-bar">
+              <span class="skill-xp-values">XP_CURRENT/XP_NEEDED</span>
+            </div>
+          </div>
+          <div class="skill-tooltip">
+            <div class="skill-description">SKILL_DESCRIPTION</div>
+            <div class="skill-bonuses">SKILL_BONUSES</div>
+          </div>
+        </div>
+      </template>
+      
+      <template id="skill-category-template">
+        <div class="skill-category-container">
+          <div class="skill-category-header">
+            <h3 class="skill-category-name">CATEGORY_NAME</h3>
+            <button class="skill-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+              <span class="toggle-icon">▼</span>
+            </button>
+          </div>
+          <div class="skill-category-content">
+            <!-- Skill elements will be added here -->
+          </div>
+        </div>
+      </template>
     
     <!-- Core System Scripts -->
     <script src="./js/controllers/eventController.js"></script>

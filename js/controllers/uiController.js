@@ -26,6 +26,13 @@ class UIController {
         console.log('Initializing UIController...');
         // Set up initial UI elements
         this.setupEventListeners();
+
+        // Make sure the skills container exists and is empty
+        const skillsScreen = document.getElementById('skills-screen');
+        if (skillsScreen) {
+            skillsScreen.innerHTML = '<h2>Skills</h2>';
+            this.skillContainers = {};
+        }
     }
     
     /**
@@ -51,6 +58,9 @@ class UIController {
 
         // Subscribe to all the action events
         this.subscribeToActionEvents();
+
+        // Subscribe to all skill events
+        this.subscribeToSkillEvents();
 
 
         // Listen for action button clicks
@@ -124,6 +134,36 @@ class UIController {
         // Listen for action data to be ready after a load
         this.eventController.on('action:data-ready', (actionData) => {
             this.updateActionTooltipData(actionData);
+        });
+    }
+
+    /**
+     * Subscribe to skill events
+     */
+    subscribeToSkillEvents() {
+        // Subscribe to skill-related events
+        this.eventController.on('skill:added', data => {
+            this.addSkill(data);
+        });
+
+        this.eventController.on('skill:updated', data => {
+            this.updateSkill(data);
+        });
+
+        this.eventController.on('skill:loaded', data => {
+            this.addSkill(data);
+        });
+
+        this.eventController.on('skill:leveled-up', data => {
+            this.handleSkillLevelUp(data);
+        });
+
+        this.eventController.on('skill:unlocked', data => {
+            this.handleSkillUnlocked(data);
+        });
+
+        this.eventController.on('skill:bonus-applied', data => {
+            this.updateSkillBonuses(data);
         });
     }
     
@@ -830,5 +870,245 @@ class UIController {
         }
     
         this.updateActionProgress(actionData);
+    }
+    /**
+     * Create a skill display element from the template
+     * @param {string} skillId - Unique identifier for the skill
+     * @param {string} skillName - Display name for the skill
+     * @param {string} description - Description of the skill
+     * @param {string} category - Category of the skill
+     * @param {number} currentLevel - Current level of the skill
+     * @param {number} maxLevel - Maximum level of the skill
+     * @param {number} xp - Current XP for the skill
+     * @param {number} xpToNextLevel - XP needed for next level
+     * @param {number} progress - Progress percentage toward next level
+     * @param {boolean} unlocked - Whether the skill is unlocked
+     * @returns {HTMLElement} - The created skill element
+     */
+    createSkillElement(skillId, skillName, description, category, currentLevel, maxLevel, xp, xpToNextLevel, progress, unlocked) {
+        console.log(`${skillName} - maxLevel: ${maxLevel}`);
+        // Get the template
+        const template = document.getElementById('skill-template');
+        
+        // Clone the template content
+        const skillElement = template.content.cloneNode(true);
+        
+        // Fill in the template with the specific skill info
+        skillElement.querySelector('.skill-name').textContent = skillName;
+        skillElement.querySelector('.skill-level').textContent = `Level ${currentLevel}/${maxLevel}`;
+        
+        const skillBar = skillElement.querySelector('.skill-bar');
+        
+        // Set the width of the bar based on progress percentage
+        skillBar.style.width = `${progress}%`;
+        
+        // Set XP values
+        skillElement.querySelector('.skill-xp-values').textContent = `${xp}/${xpToNextLevel}`;
+        
+        // Add description and bonuses placeholder
+        skillElement.querySelector('.skill-description').textContent = description;
+        
+        // We'll add bonuses later when we have that information
+        skillElement.querySelector('.skill-bonuses').textContent = 'Bonuses will appear as you level up';
+        
+        // Add a unique identifier to the container
+        const container = skillElement.querySelector('.skill-container');
+        container.id = `skill-${skillId}`;
+        container.classList.add(category); // Add category as a class for styling
+        
+        // Add locked class if not unlocked
+        if (!unlocked) {
+            container.classList.add('locked');
+        }
+        
+        return skillElement;
+    }
+
+    /**
+     * Create or get a skill category container
+     * @param {string} category - Category name
+     * @returns {HTMLElement} - The category container
+     */
+    getOrCreateCategoryContainer(category) {
+        const existingContainer = document.querySelector(`.skill-category-container[data-category="${category}"]`);
+        
+        if (existingContainer) {
+            return existingContainer;
+        }
+        
+        // Get the template
+        const template = document.getElementById('skill-category-template');
+        
+        // Clone the template content
+        const categoryElement = template.content.cloneNode(true);
+        
+        // Fill in the template
+        categoryElement.querySelector('.skill-category-name').textContent = category;
+        categoryElement.querySelector('.skill-category-toggle').setAttribute('aria-label', `Toggle ${category} Skills`);
+        
+        // Add category identifier
+        const container = categoryElement.querySelector('.skill-category-container');
+        container.setAttribute('data-category', category);
+        
+        // Add event listener for collapsing/expanding
+        const header = categoryElement.querySelector('.skill-category-header');
+        const content = categoryElement.querySelector('.skill-category-content');
+        const toggle = categoryElement.querySelector('.skill-category-toggle');
+        
+        header.addEventListener('click', () => {
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        });
+        
+        // Add to the skills screen
+        const skillsScreen = document.getElementById('skills-screen');
+        skillsScreen.appendChild(container);
+        
+        return container;
+    }
+
+    /**
+     * Adds a skill to the UI
+     * @param {Object} data - Skill data from event
+     */
+    addSkill(data) {
+        // Create the skill element
+        const skillElement = this.createSkillElement(
+            data.id,
+            data.name,
+            data.description,
+            data.category,
+            data.level,
+            data.maxLevel,
+            data.xp,
+            data.xpToNextLevel,
+            data.progress,
+            data.unlocked
+        );
+        
+        // Get or create the category container
+        const categoryContainer = this.getOrCreateCategoryContainer(data.category);
+        
+        // Add to the category content
+        const categoryContent = categoryContainer.querySelector('.skill-category-content');
+        categoryContent.appendChild(skillElement);
+        
+        // Store a reference to easily find this element later
+        this.skillContainers = this.skillContainers || {};
+        this.skillContainers[data.id] = `skill-${data.id}`;
+    }
+
+    /**
+     * Updates a skill's display
+     * @param {Object} data - Updated skill data
+     */
+    updateSkill(data) {
+        const containerId = this.skillContainers?.[data.id];
+        if (!containerId) return;
+        
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        // Update level display
+        const levelDisplay = container.querySelector('.skill-level');
+        if (levelDisplay) {
+            levelDisplay.textContent = `Level ${data.level}/${data.maxLevel}`;
+        }
+        
+        // Update XP display
+        const xpDisplay = container.querySelector('.skill-xp-values');
+        if (xpDisplay) {
+            xpDisplay.textContent = `${data.xp}/${data.xpToNextLevel}`;
+        }
+        
+        // Update progress bar
+        const progressBar = container.querySelector('.skill-bar');
+        if (progressBar) {
+            progressBar.style.width = `${data.progress}%`;
+        }
+    }
+
+    /**
+     * Update skill bonuses display in tooltip
+     * @param {Object} data - Bonus data
+     */
+    updateSkillBonuses(data) {
+        const containerId = this.skillContainers?.[data.skillId];
+        if (!containerId) return;
+        
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        // Get bonuses element
+        const bonusesElement = container.querySelector('.skill-bonuses');
+        if (!bonusesElement) return;
+        
+        // Format and update bonuses text
+        let bonusText = '';
+        
+        switch (data.bonusType) {
+            case 'stat_max':
+                bonusText = `Increases ${this.capitalizeFirstLetter(data.target)} maximum by ${data.value}`;
+                break;
+            case 'stat_regen':
+                bonusText = `Increases ${this.capitalizeFirstLetter(data.target)} regeneration by ${data.value}/sec`;
+                break;
+            case 'currency_max':
+                bonusText = `Increases ${this.capitalizeFirstLetter(data.target)} capacity by ${data.value}`;
+                break;
+            case 'action_modifier':
+                bonusText = `Improves ${this.capitalizeFirstLetter(data.target)} action by ${data.value}x`;
+                break;
+            case 'action_unlock':
+                bonusText = `Unlocks ${this.capitalizeFirstLetter(data.target)} action`;
+                break;
+            default:
+                bonusText = `${data.bonusType}: ${data.value}`;
+        }
+        
+        // Add bonus to existing text
+        const currentText = bonusesElement.textContent;
+        if (currentText === 'Bonuses will appear as you level up') {
+            bonusesElement.textContent = `Level ${data.skillLevel}: ${bonusText}`;
+        } else {
+            bonusesElement.textContent = `${currentText}\nLevel ${data.skillLevel}: ${bonusText}`;
+        }
+    }
+
+    /**
+     * Handle skill unlocked event
+     * @param {Object} data - Unlock data
+     */
+    handleSkillUnlocked(data) {
+        const containerId = this.skillContainers?.[data.id];
+        
+        // If skill is already in UI, update it
+        if (containerId) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.classList.remove('locked');
+            }
+        } else {
+            // Otherwise, we'll receive a skill:added event soon
+            console.log(`Skill ${data.name} unlocked by ${data.unlockedBy}`);
+        }
+        
+        // Show notification
+        this.eventController.emit('ui:notification', {
+            message: `New skill unlocked: ${data.name}!`,
+            type: 'info'
+        });
+    }
+
+    /**
+     * Handle skill level up event
+     * @param {Object} data - Level up data
+     */
+    handleSkillLevelUp(data) {
+        // Show notification
+        this.eventController.emit('ui:notification', {
+            message: `${data.name} skill leveled up to ${data.level}!`,
+            type: 'success'
+        });
     }
 }

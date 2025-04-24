@@ -1,0 +1,204 @@
+/* Skill System Styles */
+.skill-section {
+  margin-bottom: var(--space-lg);
+}
+
+.skill-category-container {
+  margin-bottom: var(--space-md);
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-medium);
+  overflow: hidden;
+}
+
+.skill-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.skill-category-header:hover {
+  background-color: var(--color-bg-element);
+}
+
+.skill-category-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.skill-category-toggle {
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.skill-category-toggle.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.skill-category-content {
+  padding: var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+  transition: max-height var(--transition-medium), padding var(--transition-medium);
+}
+
+.skill-category-content.collapsed {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Individual Skill Styles */
+.skill-container {
+  background-color: var(--color-bg-element);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  overflow: hidden;
+}
+
+.skill-container:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.skill-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 16px;
+}
+
+.skill-level {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.skill-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--color-border-medium);
+  margin-bottom: var(--space-sm);
+}
+
+.skill-bar {
+  height: 100%;
+  width: 50%; /* Will be set by JavaScript */
+  background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-primary-hover));
+  transition: width var(--transition-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-xp-values {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  font-family: var(--font-ui);
+}
+
+.skill-tooltip {
+  position: absolute;
+  top: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  z-index: 100;
+  width: 250px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast), top var(--transition-fast);
+  font-size: 14px;
+}
+
+.skill-container:hover .skill-tooltip {
+  opacity: 1;
+  visibility: visible;
+  top: 100%;
+}
+
+/* Add arrow to tooltip */
+.skill-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent var(--color-border-medium) transparent;
+}
+
+.skill-description {
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
+}
+
+.skill-bonuses {
+  color: var(--color-accent-success);
+  font-size: 13px;
+}
+
+/* Skill types - can add specific colors for different skill categories */
+.skill-container.Physical .skill-bar {
+  background: linear-gradient(to right, hsl(0, 70%, 45%), var(--color-health));
+}
+
+.skill-container.Magic .skill-bar {
+  background: linear-gradient(to right, hsl(210, 70%, 45%), var(--color-mana));
+}
+
+.skill-container.Knowledge .skill-bar {
+  background: linear-gradient(to right, hsl(280, 50%, 45%), var(--color-rage));
+}
+
+.skill-container.Crafting .skill-bar {
+  background: linear-gradient(to right, hsl(145, 60%, 35%), var(--color-stamina));
+}
+
+/* Locked skill appearance */
+.skill-container.locked {
+  opacity: 0.6;
+  filter: grayscale(0.7);
+}
+
+.skill-container.locked .skill-bar {
+  background: linear-gradient(to right, var(--color-dark-gray), var(--color-gray));
+}
+
+.skill-container.locked .skill-name::after {
+  content: " (Locked)";
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}

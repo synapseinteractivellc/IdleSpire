@@ -16,6 +16,7 @@ class Game {
         this.saveController = new SaveController(this.eventController, this.gameState);
         this.actionLogController = new ActionLogController(this.eventController);
         this.actionController = new ActionController(this.eventController, this.gameState);
+        this.skillController = new SkillController(this.eventController, this.gameState);
         
         // Create test controller if in development mode
         // this.testEventController = new TestEventController(this.eventController);
