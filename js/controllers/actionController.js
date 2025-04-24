@@ -291,6 +291,7 @@ class ActionController {
             this.eventController.emit('action:completed', {
                 id: result.id,
                 name: result.name,
+                completionCount: result.completionCount,
                 message: result.message,
                 rewards: result.rewards,
                 autoRestarted: this.activeAction && this.activeAction.id === result.id

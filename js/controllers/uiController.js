@@ -240,7 +240,7 @@ class UIController {
             const statRate = container.querySelector('.stat-rate');
             
             // Update the text
-            statValues.textContent = `${currentValue}/${maxValue}`;
+            statValues.textContent = `${currentValue.toFixed(1)}/${maxValue}`;
             
             // Update the bar width
             const percentage = (currentValue / maxValue) * 100;
@@ -387,6 +387,10 @@ class UIController {
         button.querySelector('.action-button').setAttribute('aria-label', actionData.name);
         button.querySelector('.action-name').textContent = actionData.name;
         button.querySelector('.action-description').textContent = actionData.description;
+        button.querySelector('.action-completions').textContent = 0;
+        button.querySelector('.action-current-percentage').textContent = 'Progress: 0';
+        button.querySelector('.action-costs').textContent = actionData.costs;
+        button.querySelector('.action-rewards').textContent = actionData.rewards;
         
         // Add event listener
         button.querySelector('.action-button').addEventListener('click', () => {
@@ -564,9 +568,9 @@ class UIController {
         }
         
         // Update percentage
-        const percentage = button.querySelector('.action-current-percentage');
+        const percentage = button.querySelector('.action-progress-text');
         if (percentage) {
-            percentage.textContent = `Progress: ${Math.floor(progressData.progress)}%`;
+            percentage.textContent = `${Math.floor(progressData.progress)}%`;
         }
     }
 }
