@@ -8,7 +8,92 @@
     <title>IdleSpire</title>
 </head>
 <body>
-    <h1>Welcome to My Website</h1>
-    <p>This is a basic HTML welcome page.</p>
+    <header>
+        <h1>IdleSpire</h1>
+        <p>Power Strives Towards the Pinnacle</p>
+    </header>
+    <main>        
+        <section id="welcome-container active">
+            <div class="card">
+                <h2>Create Your Character</h2>
+                <form id="character-form">
+                    <div class="form-group">
+                    <input type="text" id="character-name" name="character-name" required placeholder="Enter your character's name" 
+                        minlength="2" maxlength="20">
+                    </div>
+                    
+                    <div class="form-group">
+                    <label>Choose Your Starting Class</label>
+                    <div class="class-selection">
+                        <button type="button" id="class-waif" class="class-choice active" data-class="Waif">
+                        <span class="class-name">Waif</span><br>
+                        <span class="class-desc">A humble street urchin with quick wits and survival instincts.</span>
+                        </button>
+                        <button type="button" id="class-vagabond" class="class-choice" data-class="Vagabond">
+                        <span class="class-name">Vagabond</span><br>
+                        <span class="class-desc">A wanderer with basic skills and knowledge of the wilds.</span>
+                        </button>
+                    </div>
+                    </div>
+                    
+                    <div class="character-info">
+                    <p>Your story begins with nothing but the clothes on your back and your wits. Through persistence and clever choices, you'll
+                        rise through the ranks of society, mastering skills and uncovering the land's many secrets.</p>
+                    </div>
+                    
+                    <div class="form-actions">
+                    <button type="submit" id="start-game" class="btn-primary" aria-label="Begin Your Journey">Begin Your Journey</button>
+                    </div>
+                </form>
+            </div>
+        </section>        
+        <section id="game-container hidden">
+            <div id="game">
+                <div id="game-header">
+                    <h2 id="player-name">Player: <span id="name-display"></span></h2>
+                    <h3 id="player-class">Class: <span id="class-display"></span></h3>
+                </div>
+                <nav>
+                    <ul id="game-nav">
+                        <li><button id="main" class="nav-button" aria-label="Main Screen">Main</button></li>
+                        <li><button id="skills" class="nav-button" aria-label="View Skills">Skills</button></li>
+                        <li><button id="house" class="nav-button" aria-label="View House">House</button></li>
+                        <li><button id="quests" class="nav-button" aria-label="View Quests">Quests</button></li>
+                        <li><button id="character" class="nav-button" aria-label="Character Screen">Character</button></li>
+                    </ul>
+                </nav>
+                <div id="game-content">
+                    <sidebar id="currency-sidebar">
+                        <!-- Currency Display Populated from templates by JS -->
+                        <div id="currency-display">
+                            <p>Gold: <span id="gold-current">0</span>/<span id="gold-max">10</span></p>
+                        </div>
+                    </sidebar>
+                    <div id="main-content" class="game-section active">
+                        <h2>Welcome to the World of IdleSpire!</h2>
+                        <p>Explore, gather resources, and build your empire.</p>
+                    </div>
+                    <sidebar id="status-display">
+                        <div id="current-action">
+                            <h3>Current Action</h3>
+                            <p id="action-text">None</p>
+                        </div>">
+                        <div class="stat-bar-container">
+                            <!-- Stat Bar Display Populated from templates by JS -->
+                            <div class="stat-container">
+                                <span id="stat-name">Stat:</span>
+                                <div class="stat-progress-bar"> 
+                                </div>
+                            </div>                            
+                        </div>
+                    </sidebar>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <footer class="game-footer">
+        &copy; 2025 Synapse Interactive LLC. MIT License. Dev Page: <a href="https://github.com/synapseinteractivellc/IdleSpire">Github</a>
+    </footer>
 </body>
 </html>
