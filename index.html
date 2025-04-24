@@ -74,20 +74,26 @@
                 </nav>
                 <div id="game-content">
                     <sidebar id="currency-panel">
-                        <!-- Currency Display Populated from templates by JS -->
+                      <!-- Currency Display Populated from templates by JS -->
                     </sidebar>
                     <div id="main-content" class="game-section active">
-                        <h2>Welcome to the World of IdleSpire!</h2>
-                        <p>Explore, gather resources, and build your empire.</p>
+                      <h2>Welcome to the World of IdleSpire!</h2>
+                      <p>Explore, gather resources, and build your empire.</p>
                     </div>
                     <sidebar id="status-display">
-                        <div id="current-action">
-                            <h3>Current Action</h3>
-                            <p id="action-text">None</p>
-                        </div>
-                        <div id="stats-panel">
-                            <!-- Stat Bar Display Populated from templates by JS -->
-                        </div>
+                      <div id="current-action">
+                        <h3>Current Action</h3>
+                        <p id="action-text">None</p>
+                      </div>
+                      <div id="stats-panel">
+                        <!-- Stat Bar Display Populated from templates by JS -->
+                      </div>
+                    </sidebar>
+                    <sidebar id="action-log">
+                      <h3 class="action-log-title">Activity Log</h3>
+                      <div class="action-log-entries">
+                        <!-- Action Log entries will be populated here -->
+                      </div>
                     </sidebar>
                 </div>
             </div>
@@ -120,11 +126,17 @@
           </div>
         </div>
     </template>
+    <template id="action-log-entry-template">
+        <div class="action-log-entry">
+          <div class="action-log-timestamp">TIMESTAMP</div>
+          <div class="action-log-message">ACTION_MESSAGE</div>
+        </div>
+    </template>
     
     <!-- Core System Scripts -->
     <script src="./js/controllers/eventController.js"></script>
     <script src="./js/utils/testEventController.js"></script>
-    
+
     <!-- Models -->
     <script src="./js/models/resource.js"></script>
     <script src="./js/models/stat.js"></script>
@@ -135,7 +147,7 @@
     <script src="./js/models/skill.js"></script>
     <script src="./js/models/home.js"></script>
     <script src="./js/models/gameState.js"></script>
-    
+
     <!-- Controllers -->
     <script src="./js/controllers/saveController.js"></script>
     <script src="./js/controllers/uiController.js"></script>
@@ -146,10 +158,11 @@
     <script src="./js/controllers/currencyController.js"></script>
     <script src="./js/controllers/upgradeController.js"></script>
     <script src="./js/controllers/homeController.js"></script>
-    
+    <script src="./js/controllers/actionLogController.js"></script>
+
     <!-- Views -->
     <script src="./js/views/viewManager.js"></script>
-    
+
     <!-- Main Game Script (must be last) -->
     <script src="./js/game.js"></script>
 </body>

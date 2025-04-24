@@ -6,13 +6,14 @@ class Game {
         // Create the event controller - the central messaging system
         this.eventController = new EventController();
         
-        // Create game state
+        // Create the game state
         this.gameState = new GameState();
         
-        // Create other controllers
-        this.saveController = new SaveController(this.eventController, this.gameState);
+        // Create controllers
         this.uiController = new UIController(this.eventController);
-        this.gameController = new GameController(this.eventController, this.gameState);
+        this.gameController = new GameController(this.eventController);
+        this.saveController = new SaveController(this.eventController, this.gameState);
+        this.actionLogController = new ActionLogController(this.eventController);
         
         // Create test controller if in development mode
         this.testEventController = new TestEventController(this.eventController);
@@ -28,28 +29,87 @@ class Game {
         console.log('Initializing IdleSpire game...');
         
         // Initialize controllers
-        this.saveController.init();
         this.uiController.init();
         this.gameController.init();
+        this.saveController.init();
+        this.actionLogController.init();
         
         // Initialize test controller in development mode
         this.testEventController.init();
         
         console.log('Game initialization complete');
         
-        // First check if we have a saved game
-        const hasExistingSave = this.saveController.loadGame();
+        // Check for existing save
+        const hasSave = this.saveController.loadGame();
         
-        if (hasExistingSave) {
-            // If we have a save, go straight to game
-            document.getElementById('welcome-container').classList.add('hidden');
-            document.getElementById('game-container').classList.remove('hidden');
-            
-            // Update UI based on loaded game state
-            this.updateUIFromGameState();
+        // If save exists, go to game screen, otherwise show welcome
+        if (hasSave) {
+            this.showGameScreen();
         } else {
-            // If no save, show character creation
+            // Trigger welcome screen
             this.setupInitialUI();
+        }
+    }
+
+    /**
+     * Show the game screen and hide welcome screen
+     */
+    showGameScreen() {
+        document.getElementById('welcome-container').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+        
+        // Update UI with character info
+        this.updateCharacterInfo();
+    }
+
+    /**
+     * Update character info in UI
+     */
+    updateCharacterInfo() {
+        const character = this.gameState.getActiveCharacter();
+        
+        if (character) {
+            // Update character info in UI
+            const characterInfo = document.getElementById('game-character-info');
+            if (characterInfo) {
+                // For now, we're just showing basic info
+                characterInfo.textContent = `${character.name} the Level 1 ${character.class}`;
+            }
+            
+            // Initialize UI with character data
+            this.initializeUIFromCharacter(character);
+        }
+    }
+    
+    /**
+     * Initialize UI elements from character data
+     * @param {Object} character - The character data
+     */
+    initializeUIFromCharacter(character) {
+        // Initialize stats
+        for (const statId in character.stats) {
+            const stat = character.stats[statId];
+            this.gameController.addNewStat(
+                statId,
+                statId.charAt(0).toUpperCase() + statId.slice(1), // Capitalize first letter
+                statId,
+                stat.current,
+                stat.max,
+                stat.gainRate || 0
+            );
+        }
+        
+        // Initialize currencies
+        for (const currencyId in character.currencies) {
+            const currency = character.currencies[currencyId];
+            this.gameController.addNewCurrency(
+                currencyId,
+                currencyId.charAt(0).toUpperCase() + currencyId.slice(1), // Capitalize first letter
+                currencyId,
+                currency.current,
+                currency.max,
+                currency.gainRate || 0
+            );
         }
     }
     
@@ -99,83 +159,20 @@ class Game {
         
         console.log('Creating character:', characterData);
         
-        // Initialize game state with character data
-        this.setupGameState(characterData);
+        // Initialize game state with character
+        const character = this.gameState.initializeWithCharacter(characterData);
         
-        // Show game container, hide welcome container
-        document.getElementById('welcome-container').classList.add('hidden');
-        document.getElementById('game-container').classList.remove('hidden');
-        
-        // Update character info in UI
-        const characterInfo = document.getElementById('game-character-info');
-        if (characterInfo) {
-            characterInfo.textContent = `${characterName} the Level 1 ${selectedClass}`;
-        }
+        // Save the game state
+        this.saveController.saveGame();
         
         // Emit character creation event
         this.eventController.emit('character:created', characterData);
-    }
-
-    /**
-     * Setup initial game state after character creation
-     * @param {Object} characterData - The character data
-     */
-    setupGameState(characterData) {
-        // Initialize game state with new character
-        const character = this.gameState.initializeWithCharacter(characterData);
         
-        // Save the initial game state
-        this.saveController.saveGame();
-        
-        // Initialize UI with character data
-        this.updateUIFromGameState();
+        // Show game container, hide welcome container
+        this.showGameScreen();
         
         // Log a test event
         this.testEventController.logMessage('Game state initialized with character: ' + characterData.name);
-    }
-
-    /**
-     * Update UI elements based on current game state
-     */
-    updateUIFromGameState() {
-        const character = this.gameState.getActiveCharacter();
-        
-        if (!character) {
-            console.error('No active character found in game state');
-            return;
-        }
-        
-        // Update character info in header
-        const characterInfo = document.getElementById('game-character-info');
-        if (characterInfo) {
-            characterInfo.textContent = `${character.name} the Level 1 ${character.class}`;
-        }
-        
-        // Add stats to UI
-        for (const statId in character.stats) {
-            const stat = character.stats[statId];
-            this.gameController.addNewStat(
-                statId,
-                statId.charAt(0).toUpperCase() + statId.slice(1), // Capitalize the stat name
-                statId,
-                stat.current,
-                stat.max,
-                stat.gainRate
-            );
-        }
-        
-        // Add currencies to UI
-        for (const currencyId in character.currencies) {
-            const currency = character.currencies[currencyId];
-            this.gameController.addNewCurrency(
-                currencyId,
-                currencyId.charAt(0).toUpperCase() + currencyId.slice(1), // Capitalize the currency name
-                currencyId,
-                currency.current,
-                currency.max,
-                currency.gainRate
-            );
-        }
     }
 }
 
