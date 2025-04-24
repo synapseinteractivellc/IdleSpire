@@ -13,6 +13,7 @@ class ActionController {
         this.actions = {}; // Dictionary of all action objects by ID
         this.activeAction = null; // Currently active action
         this.restAction = null; // Current rest action
+        this.previousAction = null; // Previous action
         
         // Subscribe to events
         this.subscribeToEvents();
@@ -99,7 +100,7 @@ class ActionController {
         });
 
         this.createAction('rest_abandoned', 'Rest in Abandoned Building', 'Find shelter and rest in an abandoned building.', {
-            baseDuration: 10000, // 10 seconds
+            baseDuration: 1000, // 10 seconds
             unlocked: true,
             autoRestart: false,
             isRestAction: true,
@@ -165,6 +166,12 @@ class ActionController {
         const action = this.actions[actionId];
         if (!action || !action.canStart()) {
             return false;
+        }
+        
+        // Store the current action as previous action if we're switching to a rest action
+        // and the current action isn't already a rest action
+        if (action.isRestAction && this.activeAction && !this.activeAction.isRestAction) {
+            this.previousAction = this.activeAction;
         }
         
         // Stop current action if there is one
@@ -288,6 +295,31 @@ class ActionController {
                 rewards: result.rewards,
                 autoRestarted: this.activeAction && this.activeAction.id === result.id
             });
+            
+            // Check if this was a rest action that's no longer active (fully rested)
+            // and if we have a previous action to resume
+            if (this.activeAction && this.activeAction.isRestAction && 
+                !this.activeAction.isActive && this.previousAction) {
+                
+                // Get health and stamina to check if they're full enough to resume
+                const health = character.stats.health ? character.stats.health.current : 0;
+                const healthMax = character.stats.health ? character.stats.health.max : 0;
+                const stamina = character.stats.stamina ? character.stats.stamina.current : 0;
+                const staminaMax = character.stats.stamina ? character.stats.stamina.max : 0;
+                
+                // Only resume if we have enough resources (at least 50% of each)
+                if (health >= healthMax * 0.5 && stamina >= staminaMax * 0.5) {
+                    const previousActionId = this.previousAction.id;
+                    this.previousAction = null; // Clear the previous action reference
+                    
+                    // Start the previous action
+                    this.startAction(previousActionId);
+                } else {
+                    // Not enough resources yet, just clear the active action
+                    this.activeAction = null;
+                    this.previousAction = null;
+                }
+            }
         }
         
         // If action failed due to insufficient resources, start rest action
@@ -493,7 +525,7 @@ class ActionController {
                 });
             } else if (actionId === 'rest_abandoned') {
                 this.createAction('rest_abandoned', 'Rest in Abandoned Building', 'Find shelter and rest in an abandoned building.', {
-                    baseDuration: 10000,
+                    baseDuration: 1000,
                     isRestAction: true,
                     autoRestart: false,
                     statRewards: {

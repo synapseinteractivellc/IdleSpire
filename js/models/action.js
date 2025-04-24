@@ -80,8 +80,13 @@ class Action {
      */
     stop(completed = false) {
         if (!this.isActive) {
-            console.log("Not active this time");
-            return null;
+            // Return a minimal result object instead of null
+            return {
+                id: this.id,
+                completed: false,
+                timeSpent: 0,
+                message: this.messages.cancel
+            };
         }
         
         const now = Date.now();
@@ -173,13 +178,32 @@ class Action {
             // Reset progress
             this.currentProgress = 0;
             
-            // If auto-restart and can start again, keep active
-            if (this.autoRestart && this.canStart() && this.completionCount < this.maxCompletions) {
-                this.completionCount++;
-                this.isActive = true;
+            // Special logic for rest actions - check if stats are full
+            if (this.isRestAction) {
+                // Check if health and stamina are at max or close to max (95%+)
+                const healthFull = !character.stats.health || 
+                    character.stats.health.current >= character.stats.health.max * 0.95;
+                const staminaFull = !character.stats.stamina || 
+                    character.stats.stamina.current >= character.stats.stamina.max * 0.95;
+                
+                // If both stats are full or nearly full, complete the rest action
+                if (healthFull && staminaFull) {
+                    this.completionCount++;
+                    this.isActive = false;
+                } else {
+                    // Otherwise, keep resting
+                    this.completionCount++;
+                    this.isActive = true;
+                }
             } else {
-                // Otherwise stop the action
-                this.stop(true);
+                // For non-rest actions, use standard auto-restart logic
+                if (this.autoRestart && this.canStart() && this.completionCount < this.maxCompletions) {
+                    this.completionCount++;
+                    this.isActive = true;
+                } else {
+                    // Otherwise stop the action
+                    this.stop(true);
+                }
             }
         }
         
