@@ -11,12 +11,17 @@ class Game {
         
         // Create controllers
         this.uiController = new UIController(this.eventController);
-        this.gameController = new GameController(this.eventController);
+        this.resourceController = new ResourceController(this.eventController, this.gameState);
+        this.gameController = new GameController(this.eventController, this.gameState);
         this.saveController = new SaveController(this.eventController, this.gameState);
         this.actionLogController = new ActionLogController(this.eventController);
         
         // Create test controller if in development mode
         this.testEventController = new TestEventController(this.eventController);
+        
+        // Game tick variables
+        this.lastUpdate = Date.now();
+        this.gameLoopId = null;
         
         // Initialize all controllers
         this.init();
@@ -30,6 +35,7 @@ class Game {
         
         // Initialize controllers
         this.uiController.init();
+        this.resourceController.init();
         this.gameController.init();
         this.saveController.init();
         this.actionLogController.init();
@@ -45,10 +51,66 @@ class Game {
         // If save exists, go to game screen, otherwise show welcome
         if (hasSave) {
             this.showGameScreen();
+            
+            // Load resources from save data
+            const character = this.gameState.getActiveCharacter();
+            if (character) {
+                this.resourceController.loadFromSaveData(character);
+            }
         } else {
             // Trigger welcome screen
             this.setupInitialUI();
         }
+        
+        // Start the game loop
+        this.startGameLoop();
+    }
+    
+    /**
+     * Start the game loop
+     */
+    startGameLoop() {
+        if (this.gameLoopId !== null) {
+            cancelAnimationFrame(this.gameLoopId);
+        }
+        
+        const gameLoop = () => {
+            const now = Date.now();
+            const deltaTime = now - this.lastUpdate;
+            
+            // Only update if at least 16ms passed (60fps max)
+            if (deltaTime >= 16) {
+                this.update(deltaTime);
+                this.lastUpdate = now;
+            }
+            
+            this.gameLoopId = requestAnimationFrame(gameLoop);
+        };
+        
+        this.gameLoopId = requestAnimationFrame(gameLoop);
+        console.log('Game loop started');
+    }
+    
+    /**
+     * Stop the game loop
+     */
+    stopGameLoop() {
+        if (this.gameLoopId !== null) {
+            cancelAnimationFrame(this.gameLoopId);
+            this.gameLoopId = null;
+            console.log('Game loop stopped');
+        }
+    }
+    
+    /**
+     * Update game state
+     * @param {number} deltaTime - Time elapsed since last update in ms
+     */
+    update(deltaTime) {
+        // Update resources
+        this.resourceController.updateResources(deltaTime);
+        
+        // Other update logic will go here as it's implemented
     }
 
     /**
@@ -75,41 +137,6 @@ class Game {
                 // For now, we're just showing basic info
                 characterInfo.textContent = `${character.name} the Level 1 ${character.class}`;
             }
-            
-            // Initialize UI with character data
-            this.initializeUIFromCharacter(character);
-        }
-    }
-    
-    /**
-     * Initialize UI elements from character data
-     * @param {Object} character - The character data
-     */
-    initializeUIFromCharacter(character) {
-        // Initialize stats
-        for (const statId in character.stats) {
-            const stat = character.stats[statId];
-            this.gameController.addNewStat(
-                statId,
-                statId.charAt(0).toUpperCase() + statId.slice(1), // Capitalize first letter
-                statId,
-                stat.current,
-                stat.max,
-                stat.gainRate || 0
-            );
-        }
-        
-        // Initialize currencies
-        for (const currencyId in character.currencies) {
-            const currency = character.currencies[currencyId];
-            this.gameController.addNewCurrency(
-                currencyId,
-                currencyId.charAt(0).toUpperCase() + currencyId.slice(1), // Capitalize first letter
-                currencyId,
-                currency.current,
-                currency.max,
-                currency.gainRate || 0
-            );
         }
     }
     

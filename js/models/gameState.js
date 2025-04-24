@@ -55,8 +55,8 @@ class GameState {
           
           // Starting stats based on character class
           stats: {
-              health: {current: 10, max: 10, gainRate: -0.1},
-              stamina: {current: 10, max: 10, gainRate: 0.1}
+              health: {current: 10, max: 10, gainRate: 0},
+              stamina: {current: 10, max: 10, gainRate: 0}
           },
           
           // Starting skills
@@ -66,7 +66,7 @@ class GameState {
           
           // Starting currencies
           currencies: {
-              gold: {current: 0, max: 10, gainRate: 0.1}
+              gold: {current: 0, max: 10, gainRate: 0}
           },
           
           // Available actions
