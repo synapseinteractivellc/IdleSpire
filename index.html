@@ -9,7 +9,7 @@
 </head>
 <body>    
     <main>        
-        <section id="welcome-container active">
+        <section id="welcome-container">
             <header class="welcome-header">
                 <h1>IdleSpire</h1>
                 <p>Power Strives Towards the Pinnacle</p>
@@ -117,7 +117,40 @@
           </div>
           <div class="stat-tooltip">
             <span class="stat-rate">GAIN_RATE/sec</span>
+          </div>
         </div>
     </template>
+    
+    <!-- Core System Scripts -->
+    <script src="./js/controllers/eventController.js"></script>
+    <script src="./js/utils/testEventController.js"></script>
+    
+    <!-- Models -->
+    <script src="./js/models/resource.js"></script>
+    <script src="./js/models/stat.js"></script>
+    <script src="./js/models/currency.js"></script>
+    <script src="./js/models/action.js"></script>
+    <script src="./js/models/character.js"></script>
+    <script src="./js/models/upgrade.js"></script>
+    <script src="./js/models/skill.js"></script>
+    <script src="./js/models/home.js"></script>
+    <script src="./js/models/gameState.js"></script>
+    
+    <!-- Controllers -->
+    <script src="./js/controllers/saveController.js"></script>
+    <script src="./js/controllers/uiController.js"></script>
+    <script src="./js/controllers/gameController.js"></script>
+    <script src="./js/controllers/characterController.js"></script>
+    <script src="./js/controllers/actionController.js"></script>
+    <script src="./js/controllers/skillController.js"></script>
+    <script src="./js/controllers/currencyController.js"></script>
+    <script src="./js/controllers/upgradeController.js"></script>
+    <script src="./js/controllers/homeController.js"></script>
+    
+    <!-- Views -->
+    <script src="./js/views/viewManager.js"></script>
+    
+    <!-- Main Game Script (must be last) -->
+    <script src="./js/game.js"></script>
 </body>
 </html>
