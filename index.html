@@ -7,13 +7,13 @@
     <link rel="icon" href="./media/tower.ico" type="image/x-icon">
     <title>IdleSpire</title>
 </head>
-<body>
-    <header>
-        <h1>IdleSpire</h1>
-        <p>Power Strives Towards the Pinnacle</p>
-    </header>
+<body>    
     <main>        
         <section id="welcome-container active">
+            <header class="welcome-header">
+                <h1>IdleSpire</h1>
+                <p>Power Strives Towards the Pinnacle</p>
+            </header>
             <div class="card">
                 <h2>Create Your Character</h2>
                 <form id="character-form">
@@ -47,12 +47,22 @@
                 </form>
             </div>
         </section>        
-        <section id="game-container hidden">
+        <section id="game-container" class="hidden">
             <div id="game">
-                <div id="game-header">
-                    <h2 id="player-name">Player: <span id="name-display"></span></h2>
-                    <h3 id="player-class">Class: <span id="class-display"></span></h3>
-                </div>
+                <header class="game-header">
+                    <div class="header-content">
+                        <h1 id="game-title">IdleSpire</h1>
+                        <div id="game-character-info">Unnamed the Level 1 Waif</div>
+                    </div>
+                    <div class="header-disclaimer">
+                        <p>Disclaimer: This game is a work in progress. Features and content are subject to change.</p>
+                        <p>Last updated: 4/23 @ 10:30pm EST</p>
+                    </div>            
+                    <div class="header-buttons">
+                        <button id="save-button" class="header-button">Save</button>
+                        <button id="wipe-button" class="header-button">Wipe</button>
+                    </div>                   
+                </header>
                 <nav>
                     <ul id="game-nav">
                         <li><button id="main" class="nav-button" aria-label="Main Screen">Main</button></li>
@@ -63,11 +73,8 @@
                     </ul>
                 </nav>
                 <div id="game-content">
-                    <sidebar id="currency-sidebar">
+                    <sidebar id="currency-panel">
                         <!-- Currency Display Populated from templates by JS -->
-                        <div id="currency-display">
-                            <p>Gold: <span id="gold-current">0</span>/<span id="gold-max">10</span></p>
-                        </div>
                     </sidebar>
                     <div id="main-content" class="game-section active">
                         <h2>Welcome to the World of IdleSpire!</h2>
@@ -77,23 +84,40 @@
                         <div id="current-action">
                             <h3>Current Action</h3>
                             <p id="action-text">None</p>
-                        </div>">
-                        <div class="stat-bar-container">
+                        </div>
+                        <div id="stats-panel">
                             <!-- Stat Bar Display Populated from templates by JS -->
-                            <div class="stat-container">
-                                <span id="stat-name">Stat:</span>
-                                <div class="stat-progress-bar"> 
-                                </div>
-                            </div>                            
                         </div>
                     </sidebar>
                 </div>
-
             </div>
         </section>
     </main>
     <footer class="game-footer">
         &copy; 2025 Synapse Interactive LLC. MIT License. Dev Page: <a href="https://github.com/synapseinteractivellc/IdleSpire">Github</a>
     </footer>
+    <template id="currency-template">
+        <div class="currency-container">
+          <div class="currency-info">
+            <span class="currency-name">CURRENCY_NAME</span>
+            <span class="currency-values">CURRENT_VALUE/MAX_VALUE</span>
+          </div>
+          <div class="currency-tooltip">
+            <span class="currency-rate">GAIN_RATE/sec</span>
+          </div>
+        </div>
+      </template>
+    <template id="stat-template">
+        <div class="stat-container">
+          <div class="stat-label">STAT_NAME</div>
+          <div class="stat-bar-container">
+            <div class="stat-bar" data-stat-type="STAT_TYPE">
+              <span class="stat-values">CURRENT_VALUE/MAX_VALUE</span>
+            </div>
+          </div>
+          <div class="stat-tooltip">
+            <span class="stat-rate">GAIN_RATE/sec</span>
+        </div>
+    </template>
 </body>
 </html>

@@ -1,6 +1,10 @@
-<div class="stat-container">
-    <span id="stat-name">Stat:</span>
-    <div class="stat-progress-bar"> 
+<template id="stat-template">
+    <div class="stat-container">
+      <div class="stat-label">STAT_NAME</div>
+      <div class="stat-bar-container">
+        <div class="stat-bar" data-stat-type="STAT_TYPE">
+          <span class="stat-values">CURRENT_VALUE/MAX_VALUE</span>
+        </div>
+      </div>
     </div>
-</div>
-
+</template>
