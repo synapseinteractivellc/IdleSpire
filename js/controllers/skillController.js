@@ -29,12 +29,7 @@ class SkillController {
      */
     init() {
         console.log('Initializing SkillController...');
-        
-        // Setup initial skills
-        this.setupInitialSkills();
-        
-        // Load any existing skills from game state
-        this.loadSkillsFromGameState();
+
     }
     
     /**
@@ -173,6 +168,18 @@ class SkillController {
      * @returns {Skill} The created skill
      */
     createSkill(id, name, description, options = {}) {
+        // Check if skill already exists
+        if (this.skills[id]) {
+            // If it exists, update any properties that might need updating
+            const existingSkill = this.skills[id];
+            
+            // We could optionally update description or other properties here if needed
+            // existingSkill.description = description;
+            
+            // Return existing skill instead of creating a new one
+            return existingSkill;
+        }
+
         // Create the skill
         const skill = new Skill(id, name, description, options);
         
@@ -233,6 +240,7 @@ class SkillController {
             id: skillId,
             name: skill.name,
             level: skill.currentLevel,
+            maxLevel: skill.maxLevel,
             xp: skill.xp,
             xpToNextLevel: skill.xpToNextLevel,
             progress: skill.getLevelProgress()
@@ -433,6 +441,7 @@ class SkillController {
                         category: 'Physical',
                         maxLevel: 5,
                         priority: 1,
+                        unlocked: true,
                         bonuses: [
                             { level: 1, type: 'stat_max', target: 'health', value: 2 },
                             { level: 3, type: 'stat_regen', target: 'health', value: 0.1 },
@@ -449,6 +458,7 @@ class SkillController {
                         category: 'Physical',
                         maxLevel: 5,
                         priority: 2,
+                        unlocked: true,
                         bonuses: [
                             { level: 1, type: 'currency_max', target: 'gold', value: 5 },
                             { level: 3, type: 'action_modifier', target: 'beg', value: 1.5 },
@@ -465,6 +475,7 @@ class SkillController {
                         category: 'Physical',
                         maxLevel: 5,
                         priority: 3,
+                        unlocked: true,
                         bonuses: [
                             { level: 3, type: 'action_unlock', target: 'pickpocket', value: true }
                         ]
@@ -479,6 +490,7 @@ class SkillController {
                         category: 'Physical',
                         maxLevel: 5,
                         priority: 3,
+                        unlocked: true,
                         bonuses: [
                             { level: 1, type: 'stat_max', target: 'stamina', value: 3 },
                             { level: 3, type: 'stat_regen', target: 'stamina', value: 0.1 }
@@ -494,6 +506,7 @@ class SkillController {
                         category: 'Physical',
                         maxLevel: 5,
                         priority: 4,
+                        unlocked: true,
                         bonuses: [
                             { level: 2, type: 'stat_max', target: 'stamina', value: 2 },
                             { level: 4, type: 'action_unlock', target: 'hunt', value: true }

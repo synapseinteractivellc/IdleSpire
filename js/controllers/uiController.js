@@ -886,7 +886,6 @@ class UIController {
      * @returns {HTMLElement} - The created skill element
      */
     createSkillElement(skillId, skillName, description, category, currentLevel, maxLevel, xp, xpToNextLevel, progress, unlocked) {
-        console.log(`${skillName} - maxLevel: ${maxLevel}`);
         // Get the template
         const template = document.getElementById('skill-template');
         
@@ -972,6 +971,13 @@ class UIController {
      * @param {Object} data - Skill data from event
      */
     addSkill(data) {
+        this.skillContainers = this.skillContainers || {};
+
+        if (this.skillContainers[data.id]) {
+            return;
+        }    
+        
+
         // Create the skill element
         const skillElement = this.createSkillElement(
             data.id,
@@ -994,7 +1000,7 @@ class UIController {
         categoryContent.appendChild(skillElement);
         
         // Store a reference to easily find this element later
-        this.skillContainers = this.skillContainers || {};
+        
         this.skillContainers[data.id] = `skill-${data.id}`;
     }
 
