@@ -1,63 +1,4 @@
 /* game-screen.css - Main game interface styles */
-
-/* Header Buttons */
-.header-buttons {
-    display: flex;
-    gap: var(--space-sm);
-    align-items: flex-end;
-}
-
-/* Stats Panel */
-#stats-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-    background-color: var(--color-bg-tertiary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-medium);
-    margin-bottom: var(--space-lg);
-    width: 100%;
-}
-
-.stats-title {
-    font-size: 18px;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: var(--font-primary);
-    font-weight: 600;
-}
-
-/* Currency Panel */
-.currency-title {
-    font-size: 18px;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: var(--font-primary);
-    font-weight: 600;
-}
-
-/* Action Log */
-.action-log-title {
-    font-size: 18px;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: var(--font-primary);
-    font-weight: 600;
-}
-
-.action-log-entries {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-}
-
 /* Action System Styles */
 .action-section {
     margin-bottom: var(--space-lg);
@@ -317,4 +258,44 @@
 
 .cancel-button:hover {
     background-color: hsl(0, 70%, 45%);
+}
+
+/* Action Log */
+.action-log-title {
+    font-size: 18px;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.action-log-entries {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+/* Action Log Component */
+.action-log-entry {
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-medium);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-secondary);
+}
+
+.action-log-entry.important {
+    border-color: var(--color-accent-primary);
+    color: var(--color-text-primary);
+}
+
+.action-log-timestamp {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 3px;
+    font-family: var(--font-ui);
 }
