@@ -216,4 +216,101 @@ class Game {
 // Initialize the game when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new Game();
+
+    const characterNameInput = document.getElementById('character-name');
+    const classSelectionGroup = document.getElementById('class-selection-group');
+    const classChoices = document.querySelectorAll('.class-choice');
+    const characterInfo = document.getElementById('character-info');
+    const startButton = document.getElementById('start-game');
+    
+    // Initially hide elements
+    if (classSelectionGroup) {
+        classSelectionGroup.style.opacity = '0';
+        classSelectionGroup.style.transform = 'translateY(20px)';
+        classSelectionGroup.style.pointerEvents = 'none';
+    }
+    
+    if (characterInfo) {
+        characterInfo.style.opacity = '0';
+        characterInfo.style.transform = 'translateY(20px)';
+        characterInfo.style.pointerEvents = 'none';
+    }
+    
+    if (startButton) {
+        startButton.style.opacity = '0';
+        startButton.style.transform = 'translateY(20px)';
+        startButton.style.pointerEvents = 'none';
+    }
+    
+    // Show class selection when name is entered
+    if (characterNameInput) {
+        characterNameInput.addEventListener('input', (event) => {
+            if (event.target.value.trim().length >= 2) { // Require at least 2 characters
+                // Show class selection with animation
+                classSelectionGroup.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+                classSelectionGroup.style.opacity = '1';
+                classSelectionGroup.style.transform = 'translateY(0)';
+                classSelectionGroup.style.pointerEvents = 'auto';
+            } else {
+                // Hide class selection if name is too short
+                classSelectionGroup.style.opacity = '0';
+                classSelectionGroup.style.transform = 'translateY(20px)';
+                classSelectionGroup.style.pointerEvents = 'none';
+                
+                // Also hide subsequent elements
+                characterInfo.style.opacity = '0';
+                characterInfo.style.transform = 'translateY(20px)';
+                characterInfo.style.pointerEvents = 'none';
+                
+                startButton.style.opacity = '0';
+                startButton.style.transform = 'translateY(20px)';
+                startButton.style.pointerEvents = 'none';
+            }
+        });
+        
+        // Check initial state (in case of page refresh with filled input)
+        if (characterNameInput.value.trim().length >= 2) {
+            classSelectionGroup.style.opacity = '1';
+            classSelectionGroup.style.transform = 'translateY(0)';
+            classSelectionGroup.style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Show character info when a class is selected
+    if (classChoices.length > 0) {
+        classChoices.forEach(choice => {
+            choice.addEventListener('click', () => {
+                // Remove active class from all buttons
+                classChoices.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                choice.classList.add('active');
+                
+                // Show character info with animation
+                characterInfo.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+                characterInfo.style.opacity = '1';
+                characterInfo.style.transform = 'translateY(0)';
+                characterInfo.style.pointerEvents = 'auto';
+                
+                // Show start button after a delay
+                setTimeout(() => {
+                    startButton.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+                    startButton.style.opacity = '1';
+                    startButton.style.transform = 'translateY(0)';
+                    startButton.style.pointerEvents = 'auto';
+                }, 900); // 0.9s delay before showing the button
+            });
+        });
+        
+        // Check if a class is already selected (page refresh case)
+        const activeClass = document.querySelector('.class-choice.active');
+        if (activeClass) {
+            characterInfo.style.opacity = '1';
+            characterInfo.style.transform = 'translateY(0)';
+            characterInfo.style.pointerEvents = 'auto';
+            
+            startButton.style.opacity = '1';
+            startButton.style.transform = 'translateY(0)';
+            startButton.style.pointerEvents = 'auto';
+        }
+    }
 });

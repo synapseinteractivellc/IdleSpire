@@ -4,19 +4,10 @@
     margin-bottom: var(--space-lg);
 }
 
-.action-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--space-md);
-    margin-top: var(--space-md);
-}
-
-.action-button-container {
-    position: relative;
-}
-
 .action-button {
     width: 100%;
+    height: 75px; /* Fixed height for all buttons */
+    min-width: 180px; /* Minimum width */
     background-color: var(--color-bg-element);
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
@@ -27,21 +18,52 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: flex-start; /* Left-align content */
     gap: var(--space-sm);
     overflow: hidden; /* Important to contain the fill */
-}
-
-.action-button-fill {
+  }
+  
+  /* Ensure the button container maintains aspect ratio */
+  .action-button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Make the buttons in the grid layout maintain uniform size */
+  .action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+  
+  /* Ensure the button name text doesn't overflow */
+  .action-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: var(--color-text-primary);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  /* Make sure the button fill maintains correct dimensions */
+  .action-button-fill {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 0%; /* Will be updated by JavaScript */
     background-color: var(--color-accent-primary);
-    opacity: 0.25; /* Subtle background that doesn't overpower text */
+    opacity: 0.25;
     transition: width 0.2s linear;
-    z-index: 1; /* Above the button background but below the content */
-}
+    z-index: 1;
+  }
 
 /* Custom fill color transitions based on progress */
 .action-button-fill[data-progress="low"] {
