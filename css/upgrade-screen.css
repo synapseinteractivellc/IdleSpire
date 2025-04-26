@@ -6,10 +6,11 @@
     margin-bottom: var(--space-lg);
 }
 
+/* Updated: Make upgrade buttons container a vertical layout */
 .upgrade-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
     margin-top: var(--space-md);
 }
 
@@ -80,7 +81,7 @@
     transform: translateX(-50%) translateY(0); /* Initial position at bottom */
     max-width: 250px;
     width: max-content;
-    background-color: var(--color-bg-secondary);
+    background-color: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
     padding: var(--space-md);
@@ -144,30 +145,65 @@
     color: var(--color-accent-success);
 }
 
-/* Category labels styles */
-.upgrade-category {
-    background-color: var(--color-bg-secondary);
-    padding: var(--space-sm) var(--space-md);
+/* Updated: Category container styles */
+.upgrade-category-container {
+    margin-bottom: var(--space-sm);
+    background-color: var(--color-bg-tertiary);
     border-radius: var(--radius-md);
-    margin-bottom: var(--space-md);
-    margin-top: var(--space-md);
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-medium);
+    overflow: visible;
 }
+
+.upgrade-category-header {
+    display: flex;
+    height: fit-content;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md);
+    background-color: var(--color-bg-secondary);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.upgrade-category-header:hover {
+    background-color: var(--color-bg-element);
+}
+
+.upgrade-category-name {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.upgrade-category-toggle {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: 10px;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
 .upgrade-category-toggle.collapsed .toggle-icon {
     transform: rotate(-90deg);
 }
-  
+
+/* Updated: Make the content area horizontal instead of grid */
 .upgrade-category-content {
     padding: var(--space-md);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-md);
     transition: max-height var(--transition-medium), padding var(--transition-medium);
 }
-  
+
+/* Make each upgrade button take a sensible width */
+.upgrade-category-content .upgrade-button-container {
+    width: 200px; /* Fixed width for each upgrade */
+    flex-grow: 0;
+}
+
 .upgrade-category-content.collapsed {
     max-height: 0;
     overflow: hidden;
@@ -175,19 +211,19 @@
 }
 
 /* Specific upgrade categories */
-.upgrade-category-storage {
+.upgrade-category-container[data-category="storage"] {
     border-left: 3px solid hsl(210, 70%, 60%);
 }
 
-.upgrade-category-attributes {
+.upgrade-category-container[data-category="attributes"] {
     border-left: 3px solid hsl(0, 70%, 50%);
 }
 
-.upgrade-category-skills {
+.upgrade-category-container[data-category="skills"] {
     border-left: 3px solid hsl(145, 60%, 40%);
 }
 
-.upgrade-category-house {
+.upgrade-category-container[data-category="house"] {
     border-left: 3px solid hsl(48, 100%, 67%);
 }
 
