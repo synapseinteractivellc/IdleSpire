@@ -42,6 +42,10 @@ class ResourceController {
         this.eventController.on('resource:reward', (data) => {
             this.handleResourceReward(data);
         });
+
+        this.eventController.on('resource:upgrade', (data) => {
+            this.handleResourceUpgrade(data);
+        });
     }
     
     /**
@@ -391,7 +395,6 @@ class ResourceController {
      */
     handleResourceReward(data) {
         const { type, id, amount, message } = data;
-        
         if (type === 'stat') {
             // Add to stat
             this.addToResource(id, amount);
@@ -418,18 +421,66 @@ class ResourceController {
             }
         }
     }
+
+    /**
+     * Handle resource upgrades from actions/skills/upgrades
+     * @param {Object} data - Reward data
+     */
+    handleResourceUpgrade(data) {
+        const { resource, type, id, amount, message } = data;
+        if (resource === 'stat') {
+            switch (type) {
+                case 'max':
+                    this.setResourceMax(id, amount);
+                    break;
+            
+                case 'regen':
+                    this.setResourceGainRate(id, amount);
+                    break;
+            }
+            
+            // Log the reward if it has a message
+            if (message) {
+                this.eventController.emit('log:entry-added', {
+                    message: message,
+                    important: true,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        } else if (resource === 'currency') {
+            switch (type) {
+                case 'max':
+                    this.setResourceMax(id, amount);
+                    break;
+            
+                case 'regen':
+                    this.setResourceGainRate(id, amount);
+                    break;
+            }            
+            // Log the reward if it has a message
+            if (message) {
+                this.eventController.emit('log:entry-added', {
+                    message: message,
+                    important: true,
+                    timestamp: new Date().toISOString()
+                });
+            }
+        }
+    }
     
     /**
      * Set the maximum value of a resource
      * @param {string} resourceId - ID of the resource
-     * @param {number} newMax - New maximum value
+     * @param {number} adjustAmount - New maximum value
      * @param {boolean} adjustCurrent - Whether to adjust current value proportionally
      * @returns {boolean} Whether the update was successful
      */
-    setResourceMax(resourceId, newMax, adjustCurrent = false) {
+    setResourceMax(resourceId, adjustAmount, adjustCurrent = false) {
         const resource = this.getResource(resourceId);
         if (!resource) return false;
         
+        const newMax = resource.max + adjustAmount;
+
         resource.setMax(newMax, adjustCurrent);
         
         // Update character data
@@ -461,10 +512,11 @@ class ResourceController {
      * @param {number} newRate - New gain rate
      * @returns {boolean} Whether the update was successful
      */
-    setResourceGainRate(resourceId, newRate) {
+    setResourceGainRate(resourceId, amount) {
         const resource = this.getResource(resourceId);
         if (!resource) return false;
         
+        const newRate = resource.gainRate + amount;
         resource.setGainRate(newRate);
         
         // Update character data

@@ -87,8 +87,8 @@ class SkillController {
                 maxLevel: 5,
                 priority: 1,
                 bonuses: [
-                    { level: 1, type: 'stat_max', target: 'health', value: 2 },
-                    { level: 3, type: 'stat_regen', target: 'health', value: 0.1 },
+                    { level: 1, type: 'stat_max', target: 'stamina', value: 2 },
+                    { level: 3, type: 'stat_regen', target: 'stamina', value: 0.1 },
                     { level: 5, type: 'action_unlock', target: 'forage', value: true }
                 ]
             }
@@ -291,37 +291,40 @@ class SkillController {
      */
     applySkillBonuses(skill, bonuses) {
         if (!bonuses || bonuses.length === 0) return;
-        
         for (const bonus of bonuses) {
             // Apply based on bonus type
-            switch (bonus.type) {
+            switch (bonus.type) {                
                 case 'stat_max':
+                    console.log('stat_max');
                     // Increase max stat value
-                    this.eventController.emit('resource:max-increase', {
-                        type: 'stat',
+                    this.eventController.emit('resource:upgrade', {
+                        resource: 'stat',
+                        type: 'max',
                         id: bonus.target,
                         amount: bonus.value,
-                        source: `${skill.name} Skill`
+                        message: `${skill.name} Skill has upgraded your ${bonus.target}`
                     });
                     break;
                     
                 case 'stat_regen':
                     // Increase stat regeneration rate
-                    this.eventController.emit('resource:regen-increase', {
-                        type: 'stat',
+                    this.eventController.emit('resource:upgrade', {
+                        resource: 'stat',
+                        type: 'regen',
                         id: bonus.target,
                         amount: bonus.value,
-                        source: `${skill.name} Skill`
+                        message: `${skill.name} Skill has upgraded your ${bonus.target}`
                     });
                     break;
                     
                 case 'currency_max':
                     // Increase max currency value
-                    this.eventController.emit('resource:max-increase', {
-                        type: 'currency',
+                    this.eventController.emit('resource:upgrade', {
+                        resource: 'currency',
+                        type: 'max',
                         id: bonus.target,
                         amount: bonus.value,
-                        source: `${skill.name} Skill`
+                        message: `${skill.name} Skill has upgraded your ${bonus.target}`
                     });
                     break;
                     
@@ -332,7 +335,7 @@ class SkillController {
                         modifierId: `skill_${skill.id}_${skill.currentLevel}`,
                         type: 'reward',
                         value: bonus.value,
-                        source: `${skill.name} Skill`
+                        message: `${skill.name} Skill`
                     });
                     break;
                     
@@ -340,7 +343,7 @@ class SkillController {
                     // Unlock an action
                     this.eventController.emit('action:unlock', {
                         actionId: bonus.target,
-                        source: `${skill.name} Skill`
+                        message: `${skill.name} Skill`
                     });
                     break;
             }
