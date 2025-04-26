@@ -19,7 +19,7 @@ class Home {
         this.level = options.level || 0;
         
         // Space management
-        this.maxFloorSpace = options.maxFloorSpace || 10;
+        this.maxFloorSpace = options.maxFloorSpace || 0;
         this.usedFloorSpace = options.usedFloorSpace || 0;
         
         // Unlocking and requirements
@@ -54,21 +54,23 @@ class Home {
         };
         
         // Check skill requirements
-        for (const [skillId, requiredLevel] of Object.entries(this.requirements.skills)) {
-            const currentLevel = character.skills?.[skillId]?.currentLevel || 0;
-            if (currentLevel < requiredLevel) {
-                result.success = false;
-                result.missingRequirements.push({
-                    type: 'skill',
-                    id: skillId,
-                    required: requiredLevel,
-                    current: currentLevel
-                });
+        if (this.requirements.skills && Object.keys(this.requirements.skills).length > 0) {
+            for (const [skillId, requiredLevel] of Object.entries(this.requirements.skills)) {
+                const currentLevel = character.skills?.[skillId]?.currentLevel || 0;
+                if (currentLevel < requiredLevel) {
+                    result.success = false;
+                    result.missingRequirements.push({
+                        type: 'skill',
+                        id: skillId,
+                        required: requiredLevel,
+                        current: currentLevel
+                    });
+                }
             }
         }
         
         // Check class requirements
-        if (this.requirements.classes.length > 0 && 
+        if (this.requirements.classes && this.requirements.classes.length > 0 && 
             !this.requirements.classes.includes(character.class)) {
             result.success = false;
             result.missingRequirements.push({
@@ -79,30 +81,50 @@ class Home {
         }
         
         // Check upgrade requirements
-        for (const [upgradeId, requiredCompletions] of Object.entries(this.requirements.upgrades)) {
-            const currentCompletions = character.actions?.[upgradeId]?.completionCount || 0;
-            if (currentCompletions < requiredCompletions) {
-                result.success = false;
-                result.missingRequirements.push({
-                    type: 'upgrade',
-                    id: upgradeId,
-                    required: requiredCompletions,
-                    current: currentCompletions
-                });
+        if (this.requirements.upgrades && Object.keys(this.requirements.upgrades).length > 0) {
+            for (const [upgradeId, requiredCompletions] of Object.entries(this.requirements.upgrades)) {
+                const currentCompletions = character.actions?.[upgradeId]?.completionCount || 0;
+                if (currentCompletions < requiredCompletions) {
+                    result.success = false;
+                    result.missingRequirements.push({
+                        type: 'upgrade',
+                        id: upgradeId,
+                        required: requiredCompletions,
+                        current: currentCompletions
+                    });
+                }
             }
         }
         
         // Check currency requirements
-        for (const [currencyId, requiredAmount] of Object.entries(this.requirements.currency)) {
-            const currentAmount = character.currencies?.[currencyId]?.current || 0;
-            if (currentAmount < requiredAmount) {
-                result.success = false;
-                result.missingRequirements.push({
-                    type: 'currency',
-                    id: currencyId,
-                    required: requiredAmount,
-                    current: currentAmount
-                });
+        if (this.requirements.currency && Object.keys(this.requirements.currency).length > 0) {
+            for (const [currencyId, requiredAmount] of Object.entries(this.requirements.currency)) {
+                const currentAmount = character.currencies?.[currencyId]?.current || 0;
+                if (currentAmount < requiredAmount) {
+                    result.success = false;
+                    result.missingRequirements.push({
+                        type: 'currency',
+                        id: currencyId,
+                        required: requiredAmount,
+                        current: currentAmount
+                    });
+                }
+            }
+        }
+        
+        // Check stat requirements
+        if (this.requirements.stats && Object.keys(this.requirements.stats).length > 0) {
+            for (const [statId, requiredAmount] of Object.entries(this.requirements.stats)) {
+                const currentAmount = character.stats?.[statId]?.current || 0;
+                if (currentAmount < requiredAmount) {
+                    result.success = false;
+                    result.missingRequirements.push({
+                        type: 'stat',
+                        id: statId,
+                        required: requiredAmount,
+                        current: currentAmount
+                    });
+                }
             }
         }
         

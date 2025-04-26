@@ -68,6 +68,9 @@ class CharacterController {
         // Initialize character basic homes
         this.initializeCharacterHomes(character);
 
+        // Initialize character basic furniture
+        this.initializeCharacterFurniture(character);
+
         return character;
     }
 
@@ -105,6 +108,15 @@ class CharacterController {
     initializeCharacterHomes(character) {
         if (!character) return;
         this.eventController.emit('character:needHomes', character);
+    }
+
+    /** 
+     * Initialize default furniture for characters
+     * @param {Character} character - The character to initialize
+     */
+    initializeCharacterFurniture(character) {
+        if (!character) return;
+        this.eventController.emit('character:needFurniture', character);
     }
 
     /**

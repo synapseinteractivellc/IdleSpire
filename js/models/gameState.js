@@ -59,20 +59,14 @@ class GameState {
           
           // Starting skills
           skills: {
-              survival: {level: 0, exp: 0, maxLevel: 5, xpToNext: 100}
           },
           
           // Starting currencies
           currencies: {
-              gold: {current: 0, max: 10, gainRate: 0}
           },
           
           // Available actions
           actions: {
-              beg: {
-                  timesPerformed: 0,
-                  currentProgress: 0,
-              }
           },
           
           // Empty quest log
@@ -83,8 +77,11 @@ class GameState {
           
           // Basic home
           home: {
-              type: "street",
-              level: 0
+          },
+
+          // Empty inventory and furniture
+          inventory: {
+            furniture: {}
           },
           
           // Achievement tracking

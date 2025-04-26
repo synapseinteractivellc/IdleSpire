@@ -412,11 +412,13 @@ class UpgradeController {
      * @param {Upgrade} upgrade - Upgrade to update
      */
     updateCharacterUpgradeData(upgrade) {
+        console.log(upgrade);
         const character = this.gameState.getActiveCharacter();
         if (!character) return;
         
         character.actions = character.actions || {};
         character.actions[upgrade.id] = upgrade.serialize();
+        console.log(character.actions[upgrade.id]);
     }
     
     /**

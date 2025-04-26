@@ -53,7 +53,7 @@ class HomeController {
         this.homes = {};
         
         // Create starting homes
-        this.createHome('street', 'Street', 'Living on the streets, your first home.', {
+        const street = this.createHome('street', 'Street', 'Living on the streets, your first home.', {
             type: 'street',
             maxFloorSpace: 0,
             unlocked: true,
@@ -61,7 +61,7 @@ class HomeController {
             effects: {}
         });
         
-        this.createHome('abandoned_building', 'Abandoned Building', 'A dilapidated building you\'ve found shelter in.', {
+        const abandoned_building = this.createHome('abandoned_building', 'Abandoned Building', 'A dilapidated building you\'ve found shelter in.', {
             type: 'abandoned',
             maxFloorSpace: 10,
             unlocked: false,
@@ -73,6 +73,8 @@ class HomeController {
             },
             effects: {}
         });
+
+        this.transitionHome(street.id);
     }
     
     /**
@@ -92,6 +94,7 @@ class HomeController {
         
         // Create the home
         const home = new Home(id, name, description, options);
+        console.log(home);
         
         // Add to homes collection
         this.homes[id] = home;
@@ -127,6 +130,7 @@ class HomeController {
         // Check unlock requirements
         const requirementCheck = newHome.checkUnlockRequirements(character);
         if (!requirementCheck.success) {
+            console.log(requirementCheck.missingRequirements);
             // Emit event with requirement details
             this.eventController.emit('home:transition-failed', {
                 homeId: homeId,
@@ -135,6 +139,7 @@ class HomeController {
             return false;
         }
         
+        /*
         // If current home exists, check furniture compatibility
         const currentHome = character.home;
         if (currentHome) {
@@ -153,6 +158,7 @@ class HomeController {
                 return false;
             }
         }
+        */
         
         // Update character's home
         character.home = {
@@ -163,7 +169,10 @@ class HomeController {
         // Emit successful transition event
         this.eventController.emit('home:transitioned', {
             homeId: homeId,
-            homeName: newHome.name
+            name: newHome.name,
+            description: newHome.description,
+            usedFloorSpace: newHome.usedFloorSpace,
+            maxFloorSpace: newHome.maxFloorSpace
         });
         
         return true;
@@ -186,7 +195,10 @@ class HomeController {
         // Notify that the home has been loaded
         this.eventController.emit('home:loaded', {
             homeId: homeId,
-            homeName: this.homes[homeId].name
+            name: this.homes[homeId].name,
+            description: this.homes[homeId].description,
+            usedFloorSpace: this.homes[homeId].usedFloorSpace,
+            maxFloorSpace: this.homes[homeId].maxFloorSpace
         });
     }
     

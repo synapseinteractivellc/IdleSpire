@@ -1,0 +1,229 @@
+/* furniture-screen.css */
+
+/* Furniture Selection Grid */
+.furniture-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.furniture-selection-container {
+    position: relative;
+}
+
+.furniture-selection-button {
+    width: 100%;
+    height: 120px;
+    background-color: var(--color-bg-element);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.furniture-selection-button:hover:not(.locked) {
+    background-color: var(--color-bg-element-hover);
+    transform: translateY(-3px);
+}
+
+.furniture-selection-button.locked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(0.7);
+}
+
+.furniture-selection-button .furniture-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.furniture-selection-button .furniture-selection-status {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.furniture-selection-tooltip {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.furniture-selection-container:hover .furniture-selection-tooltip {
+    display: block;
+}
+
+.furniture-selection-tooltip .furniture-tooltip-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.furniture-selection-tooltip .furniture-tooltip-description {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.furniture-selection-tooltip .furniture-tooltip-space {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+}
+
+/* Furniture Inventory */
+.furniture-inventory-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-medium);
+}
+
+.furniture-inventory-heading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-medium);
+    padding-bottom: var(--space-xs);
+}
+
+.furniture-inventory-empty {
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    text-align: center;
+    padding: var(--space-sm) 0;
+}
+
+.furniture-inventory-item {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-element);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    border: 1px solid var(--color-border-medium);
+}
+
+.furniture-place-button {
+    background-color: var(--color-accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+}
+
+.furniture-place-button:hover {
+    background-color: var(--color-accent-primary-hover);
+}
+
+.furniture-info {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.furniture-description {
+    margin-bottom: var(--space-xs);
+}
+
+.furniture-size {
+    font-weight: 600;
+}
+
+/* Home Furniture Display */
+.home-furniture-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    margin-top: var(--space-md);
+    background-color: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-medium);
+}
+
+.home-furniture-heading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border-medium);
+    padding-bottom: var(--space-xs);
+}
+
+.home-furniture-item {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-element);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    border: 1px solid var(--color-border-medium);
+}
+
+.home-furniture-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.furniture-remove-button {
+    background-color: var(--color-accent-danger);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+    align-self: flex-end;
+}
+
+.furniture-remove-button:hover {
+    background-color: hsl(0, 70%, 45%);
+}
+
+.home-furniture-info {
+    font-size: 0.8rem;
+    color: var(--color-accent-success);
+    border-top: 1px solid var(--color-border-medium);
+    padding-top: var(--space-xs);
+    margin-top: var(--space-xs);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .furniture-selection-grid,
+    .furniture-inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}

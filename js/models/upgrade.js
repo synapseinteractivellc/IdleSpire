@@ -116,6 +116,7 @@ class Upgrade extends Action {
      * @returns {Object} Serialized upgrade data
      */
     serialize() {
+        console.log("Upgrade serialize");
         // Get the base serialized data from Action class
         const baseData = super.serialize();
         

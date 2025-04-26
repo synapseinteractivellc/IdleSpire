@@ -19,6 +19,7 @@ class Game {
         this.skillController = new SkillController(this.eventController, this.gameState);
         this.upgradeController = new UpgradeController(this.eventController, this.gameState);
         this.homeController = new HomeController(this.eventController, this.gameState);
+        this.furnitureController = new FurnitureController(this.eventController, this.gameState);
 
         
         // Create test controller if in development mode
@@ -46,6 +47,7 @@ class Game {
         this.actionController.init();
         this.skillController.init();
         this.homeController.init();
+        this.furnitureController.init();
         this.characterController.init();
         
         // Initialize test controller in development mode

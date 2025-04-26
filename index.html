@@ -340,19 +340,23 @@
       </div>
     </template>
 
-    <template id="furniture-selection-template">
-      <div class="furniture-selection-container">
-          <button class="furniture-selection-button" data-furniture-id="FURNITURE_ID">
-              <span class="furniture-name">FURNITURE_NAME</span>
-              <span class="furniture-selection-status">Coming Soon</span>
-          </button>
-          <div class="furniture-selection-tooltip">
-              <h4 class="furniture-tooltip-name">FURNITURE_NAME</h4>
-              <p class="furniture-tooltip-description">FURNITURE_DESCRIPTION</p>
-              <div class="furniture-tooltip-space">Space Required: SPACE_REQUIRED</div>
+    <template id="furniture-inventory-template">
+      <div class="furniture-inventory-item" data-furniture-id="FURNITURE_ID">
+          <button class="furniture-place-button">FURNITURE_NAME</button>
+          <div class="furniture-info">
+              <div class="furniture-description">FURNITURE_DESCRIPTION</div>
+              <div class="furniture-size">Space: FURNITURE_SIZE</div>
           </div>
       </div>
-    </template>
+  </template>
+  
+  <template id="home-furniture-template">
+      <div class="home-furniture-item" data-furniture-id="FURNITURE_ID">
+          <div class="home-furniture-name">FURNITURE_NAME</div>
+          <button class="furniture-remove-button">Remove</button>
+          <div class="home-furniture-info">FURNITURE_EFFECTS</div>
+      </div>
+  </template>
 
     <template id="upgrade-button-template">
       <div class="upgrade-button-container" id="UPGRADE_CONTAINER_ID">
@@ -384,6 +388,7 @@
     <script src="./js/models/upgrade.js"></script>
     <script src="./js/models/skill.js"></script>
     <script src="./js/models/home.js"></script>
+    <script src="./js/models/furniture.js"></script>
     <script src="./js/models/gameState.js"></script>
 
     <!-- Controllers -->
@@ -395,6 +400,7 @@
     <script src="./js/controllers/resourceController.js"></script>
     <script src="./js/controllers/upgradeController.js"></script>
     <script src="./js/controllers/homeController.js"></script>
+    <script src="./js/controllers/furnitureController.js"></script>
     <script src="./js/controllers/actionLogController.js"></script>
 
     <!-- Views -->
