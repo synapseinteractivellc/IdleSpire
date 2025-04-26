@@ -1,0 +1,209 @@
+/* upgrade-screen.css - Upgrade system styles */
+
+/* Upgrade Section */
+.upgrade-section {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.upgrade-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.upgrade-button-container {
+    position: relative;
+}
+
+.upgrade-button {
+    width: 100%;
+    background-color: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    cursor: pointer;
+    text-align: center;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    overflow: hidden;
+    min-height: 60px;
+}
+
+.upgrade-button:hover {
+    background-color: var(--color-bg-element-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.upgrade-button:active {
+    transform: translateY(0);
+}
+
+/* Add a subtle glow effect for upgrades */
+.upgrade-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, var(--color-accent-primary-hover) 0%, transparent 70%);
+    opacity: 0.1;
+    transition: opacity var(--transition-medium);
+}
+
+.upgrade-button:hover::before {
+    opacity: 0.2;
+}
+
+.upgrade-name {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 16px;
+    z-index: 2;
+    position: relative;
+}
+
+/* Tooltip styles */
+.upgrade-button-tooltip {
+    position: absolute;
+    top: 100%; /* Position it at the bottom of the container */
+    left: 50%;
+    transform: translateX(-50%) translateY(0); /* Initial position at bottom */
+    max-width: 250px;
+    width: max-content;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 
+        opacity 0.2s ease-in-out, 
+        visibility 0.2s ease-in-out,
+        transform 0.2s ease-in-out;
+}
+
+.upgrade-button-container:hover .upgrade-button-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(10px); /* Move slightly down when visible */
+}
+
+.upgrade-name-tooltip {
+    color: var(--color-text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Add a tooltip arrow */
+.upgrade-button-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Position at top */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px; /* Triangle pointing up */
+    border-style: solid;
+    border-color: transparent transparent var(--color-border-medium) transparent;
+}
+
+.upgrade-completions, .upgrade-current-percentage {
+    color: var(--color-text-secondary);
+    font-size: 12px;
+}
+
+.upgrade-description {
+    color: var(--color-text-primary);
+    font-size: 14px;
+    margin-bottom: var(--space-sm);
+}
+
+.upgrade-costs {
+    font-size: 12px;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-element);
+    color: var(--color-accent-danger);
+}
+
+.upgrade-effects {
+    font-size: 12px;
+    padding: var(--space-sm);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-element);
+    color: var(--color-accent-success);
+}
+
+/* Category labels styles */
+.upgrade-category {
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-md);
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+/* Specific upgrade categories */
+.upgrade-category-storage {
+    border-left: 3px solid hsl(210, 70%, 60%);
+}
+
+.upgrade-category-attributes {
+    border-left: 3px solid hsl(0, 70%, 50%);
+}
+
+.upgrade-category-skills {
+    border-left: 3px solid hsl(145, 60%, 40%);
+}
+
+.upgrade-category-house {
+    border-left: 3px solid hsl(48, 100%, 67%);
+}
+
+/* Disabled state for upgrades that can't be purchased */
+.upgrade-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(0.7);
+}
+
+.upgrade-button.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Max completions styles */
+.upgrade-button.max-completions {
+    background-color: var(--color-bg-element);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.upgrade-button.max-completions::after {
+    content: "Maxed";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background-color: var(--color-accent-primary);
+    color: var(--color-white);
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: var(--radius-sm);
+    z-index: 3;
+}

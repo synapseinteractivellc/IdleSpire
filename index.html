@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/welcome-screen.css">
     <link rel="stylesheet" href="./css/game-screen.css">
     <link rel="stylesheet" href="./css/skills-screen.css">
+    <link rel="stylesheet" href="./css/upgrade-screen.css">
     <link rel="stylesheet" href="./css/utilities.css">
     <link rel="icon" href="./media/tower.ico" type="image/x-icon">
     <title>IdleSpire</title>
@@ -65,7 +66,7 @@
                     </div>
                     <div class="header-disclaimer">
                         <p>Disclaimer: This game is a work in progress. Features and content are subject to change.</p>
-                        <p>Last updated: 4/23 @ 10:30pm EST</p>
+                        <p>Last updated: 4/26 @ 03:20am EST</p>
                     </div>            
                     <div class="header-buttons">
                         <button id="save-button" class="header-button">Save</button>
@@ -104,7 +105,6 @@
                         </div>
                         <div id="skills-screen" class="screen hidden">
                             <!-- Skill buttons will generate here-->
-                            <p>Placeholder for Skills</p>
                         </div>
                         <div id="house-screen" class="screen hidden">
                             <!-- House content will generate here-->
@@ -142,17 +142,45 @@
     <footer class="game-footer">
         &copy; 2025 Synapse Interactive LLC. MIT License. Dev Page: <a href="https://github.com/synapseinteractivellc/IdleSpire">Github</a>
     </footer>
-    <template id="currency-template">
-        <div class="currency-container">
-          <div class="currency-info">
-            <span class="currency-name">CURRENCY_NAME</span>
-            <span class="currency-values">CURRENT_VALUE/MAX_VALUE</span>
-          </div>
-          <div class="currency-tooltip">
-            <span class="currency-rate">GAIN_RATE/sec</span>
-          </div>
+
+    <template id="currency-category-template">
+      <div class="currency-category-container">
+        <div class="currency-category-header">
+          <h3 class="currency-category-name">CATEGORY_NAME</h3>
+          <button class="currency-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+            <span class="toggle-icon">▼</span>
+          </button>
         </div>
-      </template>
+        <div class="currency-category-content">
+          <!-- Currency elements will be added here -->
+        </div>
+      </div>
+    </template>
+    <template id="currency-template">
+      <div class="currency-container">
+        <div class="currency-info">
+          <span class="currency-name">CURRENCY_NAME</span>
+          <span class="currency-values">CURRENT_VALUE/MAX_VALUE</span>
+        </div>
+        <div class="currency-tooltip">
+          <span class="currency-rate">GAIN_RATE/sec</span>
+        </div>
+      </div>
+    </template>
+
+    <template id="stat-category-template">
+      <div class="stat-category-container">
+        <div class="stat-category-header">
+          <h3 class="stat-category-name">CATEGORY_NAME</h3>
+          <button class="stat-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+            <span class="toggle-icon">▼</span>
+          </button>
+        </div>
+        <div class="stat-category-content">
+          <!-- Stat elements will be added here -->
+        </div>
+      </div>
+    </template>
     <template id="stat-template">
         <div class="stat-container">
           <div class="stat-label">STAT_NAME</div>
@@ -165,6 +193,20 @@
             <span class="stat-rate">GAIN_RATE/sec</span>
           </div>
         </div>
+    </template>
+
+    <template id="action-category-template">
+      <div class="action-category-container">
+        <div class="action-category-header">
+          <h3 class="action-category-name">CATEGORY_NAME</h3>
+          <button class="action-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+            <span class="toggle-icon">▼</span>
+          </button>
+        </div>
+        <div class="action-category-content">
+          <!-- Action elements will be added here -->
+        </div>
+      </div>
     </template>
     <template id="action-button-template">
         <div class="action-button-container">
@@ -183,6 +225,37 @@
             </div>
         </div>
     </template>
+
+    <template id="upgrade-category-template">
+      <div class="upgrade-category-container">
+        <div class="upgrade-category-header">
+          <h3 class="upgrade-category-name">CATEGORY_NAME</h3>
+          <button class="upgrade-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+            <span class="toggle-icon">▼</span>
+          </button>
+        </div>
+        <div class="upgrade-category-content">
+          <!-- Upgrade elements will be added here -->
+        </div>
+      </div>
+    </template>
+    <template id="upgrade-button-template">
+      <div class="upgrade-button-container" id="UPGRADE_CONTAINER_ID">
+          <button class="upgrade-button" id="UPGRADE_BUTTON_ID" data-upgrade-id="UPGRADE_TYPE" aria-label="UPGRADE_LABEL">
+              <div class="upgrade-button-fill" data-progress="low"></div>
+              <span class="upgrade-name">UPGRADE_NAME</span>              
+          </button>
+          <!-- Tooltip moved outside the button -->
+          <div class="upgrade-button-tooltip">
+              <span class="upgrade-name-tooltip">UPGRADE_NAME</span><br>
+              <span class="upgrade-completions">Purchased: CURRENT_COUNT/MAX_COUNT</span><br>
+              <span class="upgrade-description">UPGRADE_DESCRIPTION</span><br>
+              <div class="upgrade-costs">COSTS</div><br>
+              <div class="upgrade-effects">EFFECTS</div>
+          </div>
+      </div>
+  </template>
+
     <template id="current-action-template">
         <div class="current-action-container">
           <div class="current-action-header">

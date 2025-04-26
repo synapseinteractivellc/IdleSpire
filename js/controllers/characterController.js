@@ -60,7 +60,10 @@ class CharacterController {
         this.initializeCharacterResources(character);
 
         // Initialize character basic actions
-        this.initializeCharacterActions(character);        
+        this.initializeCharacterActions(character);
+
+        // Initialize character basic upgrades
+        this.initializeCharacterUpgrades(character);
 
         return character;
     }
@@ -81,6 +84,15 @@ class CharacterController {
     initializeCharacterActions(character) {  
         if (!character) return;
         this.eventController.emit('character:needActions', character);
+    }
+
+    /** 
+     * Initialize default upgrades for characters
+     * @param {Character} character - The character to initialize
+     */
+    initializeCharacterUpgrades(character) {
+        if (!character) return;
+        this.eventController.emit('character:needUpgrades', character);
     }
 
     /**

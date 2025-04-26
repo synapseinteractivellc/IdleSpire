@@ -45,6 +45,11 @@ class ActionController {
         this.eventController.on('save:loaded', () => {
             this.loadActionsFromGameState();
         });
+
+        // Listen for action modifier events
+        this.eventController.on('action:add-modifier', (data) => {
+            this.addModifier(data);
+        });
     }
     
     /**
@@ -76,10 +81,10 @@ class ActionController {
                 'stamina': 0.5 // 0.5 stamina per second
             },
             currencyRewards: {
-                'gold': 1
+                'gold': 5
             },
             skillExperience: {
-                'survival': 150
+                'survival': 2
             },
             randomRewards: [
                 {
@@ -523,6 +528,69 @@ class ActionController {
         character.actions = character.actions || {};
         character.actions[action.id] = action.serialize();
     }
+
+    /**
+     * Add a modifier to an action
+     * @param {Object} data - Modifier data from event
+     * @returns {boolean} - Whether the modifier was successfully added
+     */
+    addModifier(data) {
+        // Check if we have required data
+        if (!data.actionId || !data.id || !data.type || data.value === undefined) {
+            console.warn('Missing required data for action modifier:', data);
+            return false;
+        }
+        
+        // Get the action by ID
+        const action = this.actions[data.actionId];
+        if (!action) {
+            console.warn(`Action ${data.actionId} not found for adding modifier`);
+            return false;
+        }
+        
+        try {
+            // Set default values for optional parameters
+            const source = data.source || 'System';
+            const isMultiplier = data.isMultiplier !== undefined ? data.isMultiplier : true;
+            const duration = data.duration || Infinity; // Default to permanent
+            
+            // Add the modifier to the action
+            action.addModifier(
+                data.id,
+                data.type,
+                data.value,
+                source,
+                isMultiplier,
+                duration
+            );
+            
+            // Update action in character data
+            this.updateCharacterActionData(action);
+            
+            // Log message if provided
+            if (data.message) {
+                this.eventController.emit('log:entry-added', {
+                    message: data.message,
+                    important: true,
+                    timestamp: new Date().toISOString()
+                });
+            }
+            
+            // Emit modifier added event
+            this.eventController.emit('action:modifier-added', {
+                actionId: data.actionId,
+                modifierId: data.id,
+                type: data.type,
+                value: data.value,
+                source: source
+            });
+            
+            return true;
+        } catch (error) {
+            console.error(`Error adding modifier to action ${data.actionId}:`, error);
+            return false;
+        }
+    }
     
     /**
      * Load actions from game state
@@ -549,10 +617,10 @@ class ActionController {
                         'stamina': 0.5
                     },
                     currencyRewards: {
-                        'gold': 1
+                        'gold': 5
                     },
                     skillExperience: {
-                        'survival': 50
+                        'survival': 2
                     },
                     randomRewards: [
                         {

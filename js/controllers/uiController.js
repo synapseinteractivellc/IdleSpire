@@ -26,35 +26,14 @@ class UIController {
         console.log('Initializing UIController...');
         // Set up initial UI elements
         this.setupEventListeners();
-
-        // Make sure the skills container exists and is empty
-        const skillsScreen = document.getElementById('skills-screen');
-        if (skillsScreen) {
-            skillsScreen.innerHTML = '<h2>Skills</h2>';
-            this.skillContainers = {};
-        }
     }
     
     /**
      * Subscribe to game events
      */
     subscribeToEvents() {
-        // Subscribe to stat-related events
-        this.eventController.on('stat:added', data => {
-            this.addStat(data.id, data.name, data.type, data.current, data.max, data.gainRate);
-        });
-        
-        this.eventController.on('stat:updated', data => {
-            this.updateStat(data.id, data.current, data.max, data.gainRate);
-        });
-
-        // Subscribe to currency-related events
-        this.eventController.on('currency:added', data => {
-            this.addCurrency(data.id, data.name, data.type, data.current, data.max, data.gainRate);
-        });
-        this.eventController.on('currency:updated', data => {
-            this.updateCurrency(data.id, data.current, data.max, data.gainRate);
-        });
+        // Subscribe to all resource events
+        this.subscribeToResourceEvents();
 
         // Subscribe to all the action events
         this.subscribeToActionEvents();
@@ -62,6 +41,8 @@ class UIController {
         // Subscribe to all skill events
         this.subscribeToSkillEvents();
 
+        // Subscribe to all upgrade events
+        this.subscribeToUpgradeEvents();
 
         // Listen for action button clicks
         this.eventController.on('ui:action-clicked', (data) => {
@@ -79,6 +60,28 @@ class UIController {
             if (actionController) {
                 actionController.stopAction(false);
             }
+        });
+    }
+
+    /**
+     * Subscribe to resource events
+     */
+    subscribeToResourceEvents() {
+        // Subscribe to stat-related events
+        this.eventController.on('stat:added', data => {
+            this.addStat(data.id, data.name, data.type, data.current, data.max, data.gainRate);
+        });
+        
+        this.eventController.on('stat:updated', data => {
+            this.updateStat(data.id, data.current, data.max, data.gainRate);
+        });
+
+        // Subscribe to currency-related events
+        this.eventController.on('currency:added', data => {
+            this.addCurrency(data.id, data.name, data.type, data.current, data.max, data.gainRate);
+        });
+        this.eventController.on('currency:updated', data => {
+            this.updateCurrency(data.id, data.current, data.max, data.gainRate);
         });
     }
 
@@ -164,6 +167,27 @@ class UIController {
 
         this.eventController.on('skill:bonus-applied', data => {
             this.updateSkillBonuses(data);
+        });
+    }
+
+    /**
+     * Subscribe to upgrade events
+     */
+    subscribeToUpgradeEvents() {
+        // Listen for upgrade added
+        this.eventController.on('upgrade:added', (data) => {
+            this.addUpgradeButton(data);
+        });
+        
+        // Listen for upgrade purchased
+        this.eventController.on('upgrade:purchased', (data) => {
+            this.updateUpgradeCompletion(data);
+            this.showUpgradePurchasedMessage(data);
+        });
+        
+        // Listen for upgrade data ready (after load)
+        this.eventController.on('upgrade:data-ready', (upgradeData) => {
+            this.updateUpgradeTooltipData(upgradeData);
         });
     }
     
@@ -928,7 +952,7 @@ class UIController {
      * @param {string} category - Category name
      * @returns {HTMLElement} - The category container
      */
-    getOrCreateCategoryContainer(category) {
+    getOrCreateSkillCategoryContainer(category) {
         const existingContainer = document.querySelector(`.skill-category-container[data-category="${category}"]`);
         
         if (existingContainer) {
@@ -993,7 +1017,7 @@ class UIController {
         );
         
         // Get or create the category container
-        const categoryContainer = this.getOrCreateCategoryContainer(data.category);
+        const categoryContainer = this.getOrCreateSkillCategoryContainer(data.category);
         
         // Add to the category content
         const categoryContent = categoryContainer.querySelector('.skill-category-content');
@@ -1116,5 +1140,312 @@ class UIController {
             message: `${data.name} skill leveled up to ${data.level}!`,
             type: 'success'
         });
+    }
+
+    /**
+     * Format currency costs into a readable string
+     * @param {Object} costs - The costs object from an upgrade
+     * @returns {string} - Formatted costs string
+     */
+    formatUpgradeCosts(costs) {
+        if (!costs || Object.keys(costs).length === 0) return 'Free';
+        
+        let result = `\n`;
+        
+        // Format currency costs
+        for (const currencyId in costs) {
+            const cost = costs[currencyId];
+            // Capitalize the first letter of the currency name
+            const currencyName = this.capitalizeFirstLetter(currencyId);
+            result += `${currencyName}: ${cost}\n`;
+        }
+        
+        return result;
+    }
+
+    /**
+     * Format upgrade effects into a readable string
+     * @param {Object} data - Upgrade data containing effect information
+     * @returns {string} - Formatted effects string
+     */
+    formatUpgradeEffects(data) {
+        if (!data.upgradeTarget || !data.upgradeType || !data.upgradeTargetId) return 'Unknown effect';
+        
+        let effect = '';
+        
+        switch (data.upgradeTarget) {
+            case 'resource':
+                if (data.upgradeType === 'max') {
+                    effect = `Increases maximum ${data.upgradeTargetId} by ${data.upgradeValue}`;
+                } else if (data.upgradeType === 'regen') {
+                    effect = `Increases ${data.upgradeTarget} regeneration by ${data.upgradeValue} per second`;
+                }
+                break;
+                
+            case 'action':
+                if (data.upgradeType === 'efficiency') {
+                    const percent = (data.upgradeValue - 1) * 100;
+                    effect = `Increases ${data.upgradeTargetId} efficiency by ${percent}%`;
+                }
+                break;
+                
+            default:
+                effect = `${data.upgradeType} effect on ${data.upgradeTargetId}`;
+        }
+        
+        return effect;
+    }
+
+
+    /**
+     * Create an upgrade display element from the template
+     * @param {string} upgradeId - Unique identifier for the upgrade
+     * @param {string} upgradeName - Display name for the upgrade
+     * @param {string} category - Category of the upgrade
+     * @param {string} description - Description of the upgrade
+     * @param {Object} costs - Formatted costs of the upgrade
+     * @param {Object} effects - Formatted effects of the upgrade
+     * @param {number} completions - # of times the upgrade has been purchased
+     * @param {number} maxCompletions - Maximum # of times the upgrade can be purchased
+     * @param {number} progress - Progress percentage toward next level
+     * @param {boolean} unlocked - Whether the upgrade is unlocked
+     * @returns {HTMLElement} - The created upgrade element
+     */
+    createUpgradeElement(upgradeId, upgradeName, category, description, costs, effects, completions, maxCompletions, progress, unlocked) {
+        // Get the template
+        const template = document.getElementById('upgrade-button-template');
+
+        // Clone the template content
+        const upgradeElement = template.content.cloneNode(true);
+
+        // Fill in the template with the specific upgrade info
+        upgradeElement.querySelector('.upgrade-name').textContent = upgradeName;
+        upgradeElement.querySelector('.upgrade-name-tooltip').textContent = upgradeName
+        
+        upgradeElement.querySelector('.upgrade-button').id = `upgrade-button-${upgradeId}`;
+        upgradeElement.querySelector('.upgrade-button').setAttribute('data-upgrade-id', upgradeId);
+        upgradeElement.querySelector('.upgrade-button').setAttribute('aria-label', upgradeName);
+
+        // Set the width of the fill element based on progress percentage
+        const upgradeFill = upgradeElement.querySelector('.upgrade-button-fill');
+        upgradeFill.style.width = `${progress}%`;
+
+        // Set completion and maxCompletion
+        upgradeElement.querySelector('.upgrade-completions').textContent = `Purchased: ${completions}/${maxCompletions}`;
+
+        // Set the description
+        upgradeElement.querySelector('.upgrade-description').textContent = description;
+
+        // Set placeholders
+        upgradeElement.querySelector('.upgrade-costs').innerHTML = `Costs: <br>${costs}`;
+        upgradeElement.querySelector('.upgrade-effects').innerHTML = `Effects: Coming`;
+
+        // Add a unique identifier to the container
+        const container = upgradeElement.querySelector('.upgrade-button-container');
+        container.id = `upgrade-${upgradeId}`;
+        container.classList.add(category); // Add category as a class for styling
+
+        // Add locked class if not unlocked
+        if (!unlocked) {
+            container.classList.add('locked');
+        }
+
+
+        
+        const button = upgradeElement.querySelector('.upgrade-button');
+        // Check if max completions reached
+        if (completions >= maxCompletions && maxCompletions > 0) {
+            button.classList.add('max-completions');
+            button.disabled = true;
+        }
+        
+        // Add event listener
+        button.addEventListener('click', () => {
+            this.eventController.emit('upgrade:purchase', {
+                id: upgradeId
+            });
+        });
+        
+        return upgradeElement;
+    }    
+
+    /**
+     * Ensure a category separator exists for this category
+     * @param {string} category - Category name
+     * @returns {HTMLElement} - The category container
+     */
+    getOrCreateUpgradeCategoryContainer(category) {
+        const existingContainer = document.querySelector(`.upgrade-category-container[data-category="${category}"]`);
+
+        if (existingContainer) {
+            return existingContainer;
+        }
+
+        // Get the template
+        const template = document.getElementById('upgrade-category-template');
+
+        // Clone the template content
+        const categoryElement = template.content.cloneNode(true);
+
+        // Fill in the template
+        categoryElement.querySelector('.upgrade-category-name').textContent = this.capitalizeFirstLetter(category);
+        categoryElement.querySelector('.upgrade-category-toggle').setAttribute('aria-label', `Toggle ${category} Upgrades`);
+
+        // Add category identifier
+        const container = categoryElement.querySelector('.upgrade-category-container');
+        container.setAttribute('data-category', category);
+
+        // Add event listener for collapsing/expanding
+        const header = categoryElement.querySelector('.upgrade-category-header');
+        const content = categoryElement.querySelector('.upgrade-category-content');
+        const toggle = categoryElement.querySelector('.upgrade-category-toggle');
+
+        header.addEventListener('click', () => {
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        });
+
+        // Add to the upgrade section
+        const upgradeButtons = document.querySelector('.upgrade-buttons');
+        if (!upgradeButtons) return;
+            
+        // Insert at beginning for now
+        upgradeButtons.appendChild(container);
+
+        return container;    
+    }
+
+    /**
+     * Add an upgrade button to the UI
+     * @param {Object} upgradeData - Data about the upgrade
+     */
+    addUpgradeButton(upgradeData) {
+        this.upgradeContainers = this.upgradeContainers || {};
+
+        if (this.upgradeContainers[upgradeData.id]) {
+            return;
+        }
+
+        // Set completion count
+        const completions = upgradeData.completionCount || 0;
+        const maxCompletions = upgradeData.maxCompletions || 1;
+        
+        // Format costs
+        const formattedCosts = this.formatUpgradeCosts(upgradeData.costs);
+        
+        // Format effects
+        //const formattedEffects = this.formatUpgradeEffects(upgradeData.effects);
+        console.log(upgradeData.effects);
+
+        // Create the upgrade element
+        const upgradeElement = this.createUpgradeElement(
+            upgradeData.id,
+            upgradeData.name,
+            upgradeData.category,
+            upgradeData.description,
+            formattedCosts,
+            upgradeData.effects,
+            completions,
+            maxCompletions,
+            upgradeData.progress,
+            upgradeData.unlocked
+        );
+
+        // Get or create category container if needed
+        const categoryContainer = this.getOrCreateUpgradeCategoryContainer(upgradeData.category);
+
+        // Add to the category content
+        const categoryContent = categoryContainer.querySelector('.upgrade-category-content');
+        categoryContent.appendChild(upgradeElement);
+
+        // Store a reference to easily find this element later
+        this.upgradeContainers[upgradeData.id] = `upgrade-${upgradeData.id}`;
+    }
+
+    /**
+     * Update an upgrade button
+     * @param {Object} upgradeData - Data about the upgrade
+     */
+    updateUpgradeButton(upgradeData) {
+        const button = document.getElementById(`upgrade-${upgradeData.id}`);
+        if (!button) return;
+        
+        // Update completion count
+        const completions = upgradeData.completionCount || 0;
+        const maxCompletions = upgradeData.maxCompletions || 1;
+        
+        // Find tooltip container
+        const container = button.closest('.upgrade-button-container');
+        if (container) {
+            const completionsElement = container.querySelector('.upgrade-completions');
+            if (completionsElement) {
+                completionsElement.textContent = `Purchased: ${completions}/${maxCompletions}`;
+            }
+        }
+        
+        // Check if max completions reached
+        if (completions >= maxCompletions && maxCompletions > 0) {
+            button.classList.add('max-completions');
+            button.disabled = true;
+        } else {
+            button.classList.remove('max-completions');
+            button.disabled = false;
+        }
+    }
+
+    /**
+     * Update tooltip data for an upgrade
+     * @param {Object} upgradeData - Detailed upgrade data
+     */
+    updateUpgradeTooltipData(upgradeData) {
+        const button = document.getElementById(`upgrade-${upgradeData.id}`);
+        if (!button) return;
+        
+        // Get container
+        const container = button.closest('.upgrade-button-container');
+        if (!container) return;
+        
+        // Update costs
+        const costsElement = container.querySelector('.upgrade-costs');
+        if (costsElement && upgradeData.costs) {
+            const formattedCosts = this.formatUpgradeCosts(upgradeData.costs);
+            costsElement.innerHTML = 'Costs:<br>' + formattedCosts.replace(/\n/g, '<br>');
+        }
+        
+        // Update effects
+        const effectsElement = container.querySelector('.upgrade-effects');
+        if (effectsElement) {
+            const formattedEffects = this.formatUpgradeEffects(upgradeData);
+            effectsElement.innerHTML = 'Effects:<br>' + formattedEffects.replace(/\n/g, '<br>');
+        }
+    }
+
+    /**
+     * Update an upgrade's completion status
+     * @param {Object} data - Data about the completion
+     */
+    updateUpgradeCompletion(data) {
+        const button = document.getElementById(`upgrade-${data.id}`);
+        if (!button) return;
+        
+        // Update the button
+        this.updateUpgradeButton({
+            id: data.id,
+            completionCount: data.completionCount,
+            maxCompletions: data.maxCompletions
+        });
+    }
+
+    /**
+     * Show a message when an upgrade is purchased
+     * @param {Object} data - Data about the purchase
+     */
+    showUpgradePurchasedMessage(data) {
+        if (data.message) {
+            this.eventController.emit('ui:notification', {
+                message: data.message,
+                type: 'success'
+            });
+        }
     }
 }

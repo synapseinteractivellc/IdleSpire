@@ -427,44 +427,24 @@ class ResourceController {
      * @param {Object} data - Reward data
      */
     handleResourceUpgrade(data) {
-        const { resource, type, id, amount, message } = data;
-        if (resource === 'stat') {
-            switch (type) {
-                case 'max':
-                    this.setResourceMax(id, amount);
-                    break;
-            
-                case 'regen':
-                    this.setResourceGainRate(id, amount);
-                    break;
-            }
-            
-            // Log the reward if it has a message
-            if (message) {
-                this.eventController.emit('log:entry-added', {
-                    message: message,
-                    important: true,
-                    timestamp: new Date().toISOString()
-                });
-            }
-        } else if (resource === 'currency') {
-            switch (type) {
-                case 'max':
-                    this.setResourceMax(id, amount);
-                    break;
-            
-                case 'regen':
-                    this.setResourceGainRate(id, amount);
-                    break;
-            }            
-            // Log the reward if it has a message
-            if (message) {
-                this.eventController.emit('log:entry-added', {
-                    message: message,
-                    important: true,
-                    timestamp: new Date().toISOString()
-                });
-            }
+        const { type, id, amount, message } = data;
+        switch (type) {
+            case 'max':
+                this.setResourceMax(id, amount);
+                break;
+        
+            case 'regen':
+                this.setResourceGainRate(id, amount);
+                break;
+        }
+        
+        // Log the reward if it has a message
+        if (message) {
+            this.eventController.emit('log:entry-added', {
+                message: message,
+                important: true,
+                timestamp: new Date().toISOString()
+            });
         }
     }
     

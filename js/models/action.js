@@ -14,8 +14,11 @@ class Action {
         this.name = name;
         this.description = description;
         
+        // Add action type - 'action' or 'upgrade'
+        this.type = options.type || 'action';
+        
         // Timing properties
-        this.baseDuration = options.baseDuration || 5000; // Duration in milliseconds
+        this.baseDuration = options.baseDuration || (this.type === 'upgrade' ? 1 : 5000); // Instant for upgrades by default
         this.currentProgress = options.currentProgress || 0; // 0-100 percentage
         this.lastUpdateTime = null; // Last time this action was updated
         this.isActive = false; // Whether this action is currently running
@@ -42,6 +45,9 @@ class Action {
         this.requiredClass = options.requiredClass || null;
         this.requiredSkills = options.requiredSkills || {}; // e.g., { woodcutting: 5 } for level 5 woodcutting
         this.requiredActions = options.requiredActions || {}; // e.g., { chopWood: 10 } for 10 completions
+        this.requiredStats = options.requiredStats || {}; // e.g. { health: 20 } for health of 20
+        this.requiredCurrency = options.requiredCurrency || {}; // e.g., { gold: 10 } for min 10 gold requirement
+        this.requiredUpgrades = options.requiredUpgrades || {}; // e.g., { coinPurse: 1 } for requiring coin purse upgrade
         
         // Action modifiers
         this.modifiers = [];
@@ -57,6 +63,10 @@ class Action {
         
         // Random reward config
         this.randomRewards = options.randomRewards || []; // Array of {chance, reward, message} objects
+        
+        // For upgrades - what this upgrade affects
+        this.upgradeTarget = options.upgradeTarget || null; // What resource/stat/action this upgrade affects
+        this.upgradeEffect = options.upgradeEffect || {}; // The specific effect (e.g., { maxIncrease: 10 })
     }
     
     /**
