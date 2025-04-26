@@ -352,6 +352,7 @@ class SkillController {
             this.eventController.emit('skill:bonus-applied', {
                 skillId: skill.id,
                 skillName: skill.name,
+                skillLevel: skill.currentLevel,
                 bonusType: bonus.type,
                 target: bonus.target,
                 value: bonus.value

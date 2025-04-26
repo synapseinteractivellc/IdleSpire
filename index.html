@@ -201,22 +201,19 @@
     </template>
 
     <template id="skill-template">
-        <div class="skill-container">
-          <div class="skill-header">
-            <span class="skill-name">SKILL_NAME</span>
-            <span class="skill-level">Level CURRENT_LEVEL/MAX_LEVEL</span>
-          </div>
-          <div class="skill-bar-container">
-            <div class="skill-bar">
-              <span class="skill-xp-values">XP_CURRENT/XP_NEEDED</span>
-            </div>
-          </div>
-          <div class="skill-tooltip">
-            <div class="skill-description">SKILL_DESCRIPTION</div>
-            <div class="skill-bonuses">SKILL_BONUSES</div>
-          </div>
+      <div class="skill-container">
+        <div class="skill-fill"></div>
+        <div class="skill-header">
+          <span class="skill-name">SKILL_NAME</span>
+          <span class="skill-level">Level CURRENT_LEVEL/MAX_LEVEL</span>
         </div>
-      </template>
+        <span class="skill-xp-values">XP_CURRENT/XP_NEEDED</span>
+        <div class="skill-tooltip">
+          <div class="skill-description">SKILL_DESCRIPTION</div>
+          <div class="skill-bonuses">SKILL_BONUSES</div>
+        </div>
+      </div>
+    </template>
       
       <template id="skill-category-template">
         <div class="skill-category-container">

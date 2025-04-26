@@ -871,6 +871,7 @@ class UIController {
     
         this.updateActionProgress(actionData);
     }
+    
     /**
      * Create a skill display element from the template
      * @param {string} skillId - Unique identifier for the skill
@@ -896,13 +897,12 @@ class UIController {
         skillElement.querySelector('.skill-name').textContent = skillName;
         skillElement.querySelector('.skill-level').textContent = `Level ${currentLevel}/${maxLevel}`;
         
-        const skillBar = skillElement.querySelector('.skill-bar');
-        
-        // Set the width of the bar based on progress percentage
-        skillBar.style.width = `${progress}%`;
+        // Set the width of the fill element based on progress percentage
+        const skillFill = skillElement.querySelector('.skill-fill');
+        skillFill.style.width = `${progress}%`;
         
         // Set XP values
-        skillElement.querySelector('.skill-xp-values').textContent = `${xp}/${xpToNextLevel}`;
+        skillElement.querySelector('.skill-xp-values').textContent = `${xp}/${xpToNextLevel} XP`;
         
         // Add description and bonuses placeholder
         skillElement.querySelector('.skill-description').textContent = description;
@@ -1024,13 +1024,13 @@ class UIController {
         // Update XP display
         const xpDisplay = container.querySelector('.skill-xp-values');
         if (xpDisplay) {
-            xpDisplay.textContent = `${data.xp}/${data.xpToNextLevel}`;
+            xpDisplay.textContent = `${data.xp}/${data.xpToNextLevel} XP`;
         }
         
-        // Update progress bar
-        const progressBar = container.querySelector('.skill-bar');
-        if (progressBar) {
-            progressBar.style.width = `${data.progress}%`;
+        // Update progress bar (skill fill)
+        const progressFill = container.querySelector('.skill-fill');
+        if (progressFill) {
+            progressFill.style.width = `${data.progress}%`;
         }
     }
 
@@ -1077,7 +1077,7 @@ class UIController {
         if (currentText === 'Bonuses will appear as you level up') {
             bonusesElement.textContent = `Level ${data.skillLevel}: ${bonusText}`;
         } else {
-            bonusesElement.textContent = `${currentText}\nLevel ${data.skillLevel}: ${bonusText}`;
+            bonusesElement.innerHTML = `${currentText}<br>Level ${data.skillLevel}: ${bonusText}`;
         }
     }
 
