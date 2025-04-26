@@ -156,6 +156,23 @@
     font-weight: 600;
     color: var(--color-text-secondary);
 }
+.upgrade-category-toggle.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+  
+.upgrade-category-content {
+    padding: var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+    transition: max-height var(--transition-medium), padding var(--transition-medium);
+}
+  
+.upgrade-category-content.collapsed {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+}
 
 /* Specific upgrade categories */
 .upgrade-category-storage {
