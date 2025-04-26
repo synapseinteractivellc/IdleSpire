@@ -13,6 +13,7 @@
 
 .skill-category-header {
   display: flex;
+  height: 14px;
   justify-content: space-between;
   align-items: center;
   padding: var(--space-md);
@@ -27,7 +28,7 @@
 
 .skill-category-name {
   margin: 0;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text-primary);
 }
@@ -36,7 +37,7 @@
   background: none;
   border: none;
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: 10px;
   cursor: pointer;
   transition: transform var(--transition-fast);
 }

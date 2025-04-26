@@ -156,7 +156,7 @@
 
 .upgrade-category-header {
     display: flex;
-    height: fit-content;
+    height: 14px;
     justify-content: space-between;
     align-items: center;
     padding: var(--space-md);
@@ -171,7 +171,7 @@
 
 .upgrade-category-name {
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--color-text-primary);
 }
