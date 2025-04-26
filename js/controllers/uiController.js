@@ -26,6 +26,8 @@ class UIController {
         console.log('Initializing UIController...');
         // Set up initial UI elements
         this.setupEventListeners();
+
+        this.initHomeScreen();
     }
     
     /**
@@ -206,6 +208,44 @@ class UIController {
         // Set up navigation button listeners
         this.navButtons.forEach(button => {
             button.addEventListener('click', (event) => this.handleNavigation(event));
+        });
+    }
+
+    /**
+     * Initialize home screen elements and event listeners
+     */
+    initHomeScreen() {
+        // Get references to home screen elements
+        this.currentHomeButton = document.getElementById('current-home-btn');
+        this.homeSelectionContainer = document.getElementById('home-selection-container');
+        this.furnitureSelectionContainer = document.getElementById('furniture-selection-container');
+        
+        // Setup current home button event listener
+        if (this.currentHomeButton) {
+            this.currentHomeButton.addEventListener('click', () => this.toggleHomeSelection());
+        }
+        
+        // Subscribe to home-related events
+        this.subscribeToHomeEvents();
+    }
+    
+    /**
+     * Subscribe to home-related events
+     */
+    subscribeToHomeEvents() {
+        // Listen for home added events
+        this.eventController.on('home:added', (homeData) => {
+            this.addHomeToSelectionGrid(homeData);
+        });
+        
+        // Listen for home transition events
+        this.eventController.on('home:transitioned', (transitionData) => {
+            this.updateCurrentHomeButton(transitionData.homeId);
+        });
+        
+        // Listen for home loaded events (after save load)
+        this.eventController.on('home:loaded', (loadData) => {
+            this.updateCurrentHomeButton(loadData.homeId);
         });
     }
 
@@ -1447,5 +1487,158 @@ class UIController {
                 type: 'success'
             });
         }
+    }
+
+    /**
+     * Toggle home selection grid visibility
+     */
+    toggleHomeSelection() {
+        if (this.homeSelectionContainer) {
+            this.homeSelectionContainer.classList.toggle('hidden');
+            // Hide furniture selection if it's visible
+            if (this.furnitureSelectionContainer) {
+                this.furnitureSelectionContainer.classList.add('hidden');
+            }
+        }
+    }
+    
+    /**
+     * Update the current home button with home details
+     * @param {string} homeId - ID of the home to display
+     */
+    updateCurrentHomeButton(homeId) {
+        // Get the home from the home controller
+        const homeController = window.game.homeController;
+        const home = homeController.getHome(homeId);
+        
+        if (!home || !this.currentHomeButton) return;
+        
+        // Update button text
+        this.currentHomeButton.textContent = home.name;
+        
+        // Update tooltip details
+        const tooltipName = document.getElementById('home-tooltip-name');
+        const tooltipDesc = document.getElementById('home-tooltip-description');
+        const tooltipSpace = document.getElementById('home-tooltip-space');
+        const tooltipMods = document.getElementById('home-tooltip-mods');
+        
+        if (tooltipName) tooltipName.textContent = home.name;
+        if (tooltipDesc) tooltipDesc.textContent = home.description;
+        if (tooltipSpace) tooltipSpace.textContent = `Floor Space: ${home.usedFloorSpace}/${home.maxFloorSpace}`;
+        if (tooltipMods) {
+            // Placeholder for home modifications
+            tooltipMods.textContent = 'Modifications: None';
+        }
+    }
+    
+    /**
+     * Add a home to the home selection grid
+     * @param {Object} homeData - Data for the home to add
+     */
+    addHomeToSelectionGrid(homeData) {
+        if (!this.homeSelectionContainer) return;
+
+        // Check if a home with this ID already exists
+        const existingHome = this.homeSelectionContainer.querySelector(
+            `.home-selection-button[data-home-id="${homeData.id}"]`
+        );
+        if (existingHome) return;
+        
+        // Get the home selection template
+        const template = document.getElementById('home-selection-template');
+        if (!template) return;
+        
+        // Clone the template
+        const homeElement = template.content.cloneNode(true);
+        
+        // Update home button
+        const homeButton = homeElement.querySelector('.home-selection-button');
+        const homeNameSpan = homeButton.querySelector('.home-name');
+        if (homeNameSpan) homeNameSpan.textContent = homeData.name;
+        homeButton.dataset.homeId = homeData.id;
+        
+        // Add click event to select home
+        homeButton.addEventListener('click', () => this.selectHome(homeData.id));
+        
+        // Update tooltip
+        const tooltipName = homeElement.querySelector('.home-tooltip-name');
+        const tooltipDesc = homeElement.querySelector('.home-tooltip-description');
+        const tooltipSpace = homeElement.querySelector('.home-tooltip-space');
+        const tooltipReqs = homeElement.querySelector('.home-tooltip-requirements');
+        
+        if (tooltipName) tooltipName.textContent = homeData.name;
+        if (tooltipDesc) tooltipDesc.textContent = homeData.description;
+        if (tooltipSpace) tooltipSpace.textContent = `Floor Space: 0/${homeData.maxFloorSpace}`;
+        
+        // TODO: Improve requirement display
+        if (tooltipReqs) tooltipReqs.textContent = 'Requirements: Check in-game';
+        
+        // Add to grid
+        this.homeSelectionContainer.appendChild(homeElement);
+    }
+    
+    /**
+     * Handle home selection
+     * @param {string} homeId - ID of the selected home
+     */
+    selectHome(homeId) {
+        // Emit home transition event
+        this.eventController.emit('home:transition', { homeId: homeId });
+        
+        // Hide home selection grid
+        if (this.homeSelectionContainer) {
+            this.homeSelectionContainer.classList.add('hidden');
+        }
+        
+        // Show furniture selection grid (currently just a placeholder)
+        if (this.furnitureSelectionContainer) {
+            this.furnitureSelectionContainer.classList.remove('hidden');
+            this.populateFurnitureSelectionGrid();
+        }
+    }
+    
+    /**
+     * Populate furniture selection grid with placeholder items
+     */
+    populateFurnitureSelectionGrid() {
+        if (!this.furnitureSelectionContainer) return;
+        
+        // Clear existing furniture
+        this.furnitureSelectionContainer.innerHTML = '';
+        
+        // Placeholder furniture items
+        const placeholderFurniture = [
+            { id: 'bed', name: 'Bed', description: 'A place to rest and recover' },
+            { id: 'chest', name: 'Storage Chest', description: 'Store your hard-earned items' },
+            { id: 'table', name: 'Crafting Table', description: 'Create and modify items' },
+            { id: 'altar', name: 'Meditation Altar', description: 'Improve your skills' }
+        ];
+        
+        // Get the furniture selection template
+        const template = document.getElementById('furniture-selection-template');
+        if (!template) return;
+        
+        // Add placeholder furniture to grid
+        placeholderFurniture.forEach(furniture => {
+            const furnitureElement = template.content.cloneNode(true);
+            
+            // Update furniture button
+            const furnitureButton = furnitureElement.querySelector('.furniture-selection-button');
+            const furnitureNameSpan = furnitureButton.querySelector('.furniture-name');
+            if (furnitureNameSpan) furnitureNameSpan.textContent = furniture.name;
+            furnitureButton.dataset.furnitureId = furniture.id;
+            
+            // Update tooltip
+            const tooltipName = furnitureElement.querySelector('.furniture-tooltip-name');
+            const tooltipDesc = furnitureElement.querySelector('.furniture-tooltip-description');
+            const tooltipSpace = furnitureElement.querySelector('.furniture-tooltip-space');
+            
+            if (tooltipName) tooltipName.textContent = furniture.name;
+            if (tooltipDesc) tooltipDesc.textContent = furniture.description;
+            if (tooltipSpace) tooltipSpace.textContent = 'Space Required: Coming Soon';
+            
+            // Add to grid
+            this.furnitureSelectionContainer.appendChild(furnitureElement);
+        });
     }
 }

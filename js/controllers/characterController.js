@@ -65,6 +65,9 @@ class CharacterController {
         // Initialize character basic upgrades
         this.initializeCharacterUpgrades(character);
 
+        // Initialize character basic homes
+        this.initializeCharacterHomes(character);
+
         return character;
     }
 
@@ -93,6 +96,15 @@ class CharacterController {
     initializeCharacterUpgrades(character) {
         if (!character) return;
         this.eventController.emit('character:needUpgrades', character);
+    }
+
+    /** 
+     * Initialize default homes for characters
+     * @param {Character} character - The character to initialize
+     */
+    initializeCharacterHomes(character) {
+        if (!character) return;
+        this.eventController.emit('character:needHomes', character);
     }
 
     /**

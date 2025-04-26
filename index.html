@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/action-screen.css">
     <link rel="stylesheet" href="./css/components.css">
-    <link rel="stylesheet" href="./css/currency-screen.css">
+    <link rel="stylesheet" href="./css/currency-screen.css">    
+    <link rel="stylesheet" href="./css/home-screen.css">
     <link rel="stylesheet" href="./css/layout.css">
     <link rel="stylesheet" href="./css/skills-screen.css">
     <link rel="stylesheet" href="./css/stat-screen.css">
@@ -107,9 +108,26 @@
                             <!-- Skill buttons will generate here-->
                         </div>
                         <div id="house-screen" class="screen hidden">
-                            <!-- House content will generate here-->
-                            <p>Placeholder for House</p>
-                        </div>
+                          <div class="current-home-button-container">
+                              <button id="current-home-btn" class="current-home-button">
+                                  Current Home
+                              </button>
+                              <div class="home-button-tooltip">
+                                  <h4 id="home-tooltip-name">Home Name</h4>
+                                  <p id="home-tooltip-description">Home Description</p>
+                                  <div id="home-tooltip-space">Floor Space: 0/0</div>
+                                  <div id="home-tooltip-mods">Modifications: None</div>
+                              </div>
+                          </div>
+                          
+                          <div id="home-selection-container" class="home-selection-grid hidden">
+                              <!-- Dynamically populated home selection buttons -->
+                          </div>
+                          
+                          <div id="furniture-selection-container" class="furniture-selection-grid hidden">
+                              <!-- Dynamically populated furniture selection buttons -->
+                          </div>
+                      </div>
                         <div id="quests-screen" class="screen hidden">
                             <!-- Quests content will generate here-->
                             <p>Placeholder for Quests</p>
@@ -294,19 +312,64 @@
       </div>
     </template>
       
-      <template id="skill-category-template">
-        <div class="skill-category-container">
-          <div class="skill-category-header">
-            <h3 class="skill-category-name">CATEGORY_NAME</h3>
-            <button class="skill-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
-              <span class="toggle-icon">▼</span>
-            </button>
-          </div>
-          <div class="skill-category-content">
-            <!-- Skill elements will be added here -->
-          </div>
+    <template id="skill-category-template">
+      <div class="skill-category-container">
+        <div class="skill-category-header">
+          <h3 class="skill-category-name">CATEGORY_NAME</h3>
+          <button class="skill-category-toggle" aria-label="Toggle CATEGORY_NAME Skills">
+            <span class="toggle-icon">▼</span>
+          </button>
         </div>
-      </template>
+        <div class="skill-category-content">
+          <!-- Skill elements will be added here -->
+        </div>
+      </div>
+    </template>
+
+    <template id="home-selection-template">
+      <div class="home-selection-container">
+          <button class="home-selection-button" data-home-id="HOME_ID">
+              <span class="home-name">HOME_NAME</span>
+          </button>
+          <div class="home-selection-tooltip">
+              <h4 class="home-tooltip-name">HOME_NAME</h4>
+              <p class="home-tooltip-description">HOME_DESCRIPTION</p>
+              <div class="home-tooltip-space">Floor Space: FLOOR_SPACE</div>
+              <div class="home-tooltip-requirements">Requirements: REQUIREMENTS</div>
+          </div>
+      </div>
+    </template>
+
+    <template id="furniture-selection-template">
+      <div class="furniture-selection-container">
+          <button class="furniture-selection-button" data-furniture-id="FURNITURE_ID">
+              <span class="furniture-name">FURNITURE_NAME</span>
+              <span class="furniture-selection-status">Coming Soon</span>
+          </button>
+          <div class="furniture-selection-tooltip">
+              <h4 class="furniture-tooltip-name">FURNITURE_NAME</h4>
+              <p class="furniture-tooltip-description">FURNITURE_DESCRIPTION</p>
+              <div class="furniture-tooltip-space">Space Required: SPACE_REQUIRED</div>
+          </div>
+      </div>
+    </template>
+
+    <template id="upgrade-button-template">
+      <div class="upgrade-button-container" id="UPGRADE_CONTAINER_ID">
+          <button class="upgrade-button" id="UPGRADE_BUTTON_ID" data-upgrade-id="UPGRADE_TYPE" aria-label="UPGRADE_LABEL">
+              <div class="upgrade-button-fill" data-progress="low"></div>
+              <span class="upgrade-name">UPGRADE_NAME</span>              
+          </button>
+          <!-- Tooltip moved outside the button -->
+          <div class="upgrade-button-tooltip">
+              <span class="upgrade-name-tooltip">UPGRADE_NAME</span><br>
+              <span class="upgrade-completions">Purchased: CURRENT_COUNT/MAX_COUNT</span><br>
+              <span class="upgrade-description">UPGRADE_DESCRIPTION</span><br>
+              <div class="upgrade-costs">COSTS</div><br>
+              <div class="upgrade-effects">EFFECTS</div>
+          </div>
+      </div>
+  </template>
     
     <!-- Core System Scripts -->
     <script src="./js/controllers/eventController.js"></script>
