@@ -17,6 +17,8 @@ class Furniture {
         // Furniture type and properties
         this.type = options.type || 'basic';
         this.size = options.size || 1; // Space required in the home
+        this.ownedCount = options.ownedCount || 0; // Get how many of a piece of furniture is owned assume 0
+        this.maxCount = options.maxCount || Infinity; // Get how many of a piece of furniture can be owned, if no max allow infinite to floorSpace.
         
         // Compatibility with home types
         this.compatibility = options.compatibility || ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace']; 
@@ -175,6 +177,8 @@ class Furniture {
             description: this.description,
             type: this.type,
             size: this.size,
+            ownedCount: this.ownedCount,
+            maxCount: this.maxCount,
             compatibility: this.compatibility,
             unlocked: this.unlocked,
             requirements: this.requirements,
@@ -196,6 +200,8 @@ class Furniture {
             description: data.description,
             type: data.type || 'basic',
             size: data.size || 1,
+            ownedCount: data.ownedCount || 0,
+            maxCount: data.maxCount || Infinity,
             compatibility: data.compatibility || ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
             unlocked: data.unlocked || false,
             requirements: data.requirements || {},

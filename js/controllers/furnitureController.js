@@ -80,6 +80,7 @@ class FurnitureController {
         const bed = this.createFurniture('simple_bed', 'Simple Bed', 'A basic bed for sleeping. Improves stamina regeneration.', {
             type: 'bed',
             size: 2,
+            maxCount: 1,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
             unlocked: true,
             costs: {
@@ -112,6 +113,7 @@ class FurnitureController {
         const craftTable = this.createFurniture('crafting_table', 'Crafting Table', 'A simple table for crafting. Required for certain skills.', {
             type: 'crafting',
             size: 2,
+            maxCount: 1,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
             unlocked: false,
             requirements: {
@@ -133,6 +135,7 @@ class FurnitureController {
         const meditationMat = this.createFurniture('meditation_mat', 'Meditation Mat', 'A simple mat for meditation. Increases focus regeneration.', {
             type: 'meditation',
             size: 1,
+            maxCount: 1,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
             unlocked: false,
             requirements: {
