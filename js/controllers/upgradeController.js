@@ -77,7 +77,7 @@ class UpgradeController {
             currencyCosts: {
                 'gold': 10
             },
-            maxCompletions: 3, // Can be purchased up to 5 times
+            maxCompletions: 1, // Can be purchased up to 1 times
             requiredCurrency: {
                 'gold': 10 // Requires at least 10 gold to see this upgrade
             },
@@ -294,8 +294,14 @@ class UpgradeController {
         
         // Mark as completed
         upgrade.completionCount++;
+        
+        // Only set unlocked to false if max completions reached
+        // Otherwise keep it unlocked
         if (upgrade.completionCount >= upgrade.maxCompletions) {
             upgrade.unlocked = false; // No longer available if max completions reached
+        } else {
+            // Ensure the upgrade remains unlocked for next purchase
+            upgrade.unlocked = true;
         }
         
         // Update character data
@@ -307,6 +313,7 @@ class UpgradeController {
             name: upgrade.name,
             completionCount: upgrade.completionCount,
             maxCompletions: upgrade.maxCompletions,
+            unlocked: upgrade.unlocked,
             message: upgrade.messages.complete
         });
         
@@ -431,8 +438,6 @@ class UpgradeController {
         // Clear existing upgrades
         this.upgrades = {};
         
-        // Set up initial upgrades
-        this.setupInitialUpgrades();
         
         // Update upgrade data from saved state
         for (const actionId in character.actions) {
@@ -446,6 +451,7 @@ class UpgradeController {
                 // If it exists in our predefined upgrades, update it
                 if (upgrade) {
                     upgrade.deserialize(actionData);
+                    console.log(upgrade);
                     
                     // If unlocked, emit event for UI
                     if (upgrade.unlocked) {

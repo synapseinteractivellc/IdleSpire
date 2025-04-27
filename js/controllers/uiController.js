@@ -1495,6 +1495,12 @@ class UIController {
                 completionsElement.textContent = `Purchased: ${completions}/${maxCompletions}`;
             }
         }
+
+        if (!upgradeData.unlocked) {
+            button.classList.add('hidden');
+        }
+
+        this.updateUpgradeCategoryVisibility();
         
         // Check if max completions reached
         if (completions >= maxCompletions && maxCompletions > 0) {
@@ -1534,6 +1540,27 @@ class UIController {
     }
 
     /**
+     * Check and update upgrade category visibility
+     * Hides categories that have no visible upgrades
+     */
+    updateUpgradeCategoryVisibility() {
+        // Get all upgrade category containers
+        const categories = document.querySelectorAll('.upgrade-category-container');
+        
+        categories.forEach(category => {
+            // Get all upgrade buttons in this category that aren't hidden
+            const visibleUpgrades = category.querySelectorAll('.upgrade-button-container:not(.hidden)');
+            
+            // If there are no visible upgrades, hide the category
+            if (visibleUpgrades.length === 0) {
+                category.classList.add('hidden');
+            } else {
+                category.classList.remove('hidden');
+            }
+        });
+    }
+
+    /**
      * Update an upgrade's completion status
      * @param {Object} data - Data about the completion
      */
@@ -1545,7 +1572,8 @@ class UIController {
         this.updateUpgradeButton({
             id: data.id,
             completionCount: data.completionCount,
-            maxCompletions: data.maxCompletions
+            maxCompletions: data.maxCompletions,
+            unlocked: data.unlocked
         });
     }
 

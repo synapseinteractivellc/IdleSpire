@@ -84,7 +84,7 @@ class ActionController {
                 'gold': 5
             },
             skillExperience: {
-                'survival': 2
+                'survival': 100
             },
             randomRewards: [
                 {
@@ -620,7 +620,7 @@ class ActionController {
                         'gold': 5
                     },
                     skillExperience: {
-                        'survival': 2
+                        'survival': 100
                     },
                     randomRewards: [
                         {

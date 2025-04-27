@@ -69,7 +69,7 @@ class HomeController {
                 skills: {
                     'survival': 3
                 },
-                classes: ['Waif', 'Vagabond']
+                classes: ['waif', 'vagabond']
             },
             effects: {}
         });
