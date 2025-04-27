@@ -1611,7 +1611,6 @@ class UIController {
         const home = homeData;
 
         if (!home || !this.currentHomeButton) return;
-        console.log(home);
         
         // Update button text
         this.currentHomeButton.textContent = home.name;

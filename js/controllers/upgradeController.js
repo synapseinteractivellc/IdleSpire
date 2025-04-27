@@ -419,13 +419,11 @@ class UpgradeController {
      * @param {Upgrade} upgrade - Upgrade to update
      */
     updateCharacterUpgradeData(upgrade) {
-        console.log(upgrade);
         const character = this.gameState.getActiveCharacter();
         if (!character) return;
         
         character.actions = character.actions || {};
         character.actions[upgrade.id] = upgrade.serialize();
-        console.log(character.actions[upgrade.id]);
     }
     
     /**
@@ -451,7 +449,6 @@ class UpgradeController {
                 // If it exists in our predefined upgrades, update it
                 if (upgrade) {
                     upgrade.deserialize(actionData);
-                    console.log(upgrade);
                     
                     // If unlocked, emit event for UI
                     if (upgrade.unlocked) {

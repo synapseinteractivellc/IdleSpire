@@ -94,7 +94,6 @@ class HomeController {
         
         // Create the home
         const home = new Home(id, name, description, options);
-        console.log(home);
         
         // Add to homes collection
         this.homes[id] = home;
@@ -130,7 +129,6 @@ class HomeController {
         // Check unlock requirements
         const requirementCheck = newHome.checkUnlockRequirements(character);
         if (!requirementCheck.success) {
-            console.log(requirementCheck.missingRequirements);
             // Emit event with requirement details
             this.eventController.emit('home:transition-failed', {
                 homeId: homeId,
@@ -159,11 +157,15 @@ class HomeController {
             }
         }
         */
-        
+       
         // Update character's home
         character.home = {
             id: newHome.id,
-            type: newHome.type
+            type: newHome.type,
+            name: newHome.name,
+            description: newHome.description,
+            usedFloorSpace: newHome.usedFloorSpace,
+            maxFloorSpace: newHome.maxFloorSpace
         };
         
         // Emit successful transition event
@@ -183,23 +185,75 @@ class HomeController {
      */
     loadHomesFromGameState() {
         const character = this.gameState.getActiveCharacter();
-        if (!character || !character.home) return;
+        if (!character) return;
         
-        // Ensure the home exists in our homes collection
-        const homeId = character.home.id;
-        if (!this.homes[homeId]) {
-            console.warn(`Home ${homeId} not found in homes collection`);
-            return;
+        // Check if character has home data
+        if (character.home) {
+            // We have saved home data, so we need to ensure those homes exist
+            const currentHomeId = character.home.id;
+            
+            // Check if we already have this home in our collection
+            if (!this.homes[currentHomeId]) {
+                // We don't have the homes yet, so create them
+                // Clear existing homes first
+                this.homes = {};
+                
+                // Create the initial homes without transitioning
+                // This is a version of setupInitialHomes without the transition
+                this.createHome('street', 'Street', 'Living on the streets, your first home.', {
+                    type: 'street',
+                    maxFloorSpace: 0,
+                    unlocked: true,
+                    requirements: {},
+                    effects: {}
+                });
+                
+                this.createHome('abandoned_building', 'Abandoned Building', 'A dilapidated building you\'ve found shelter in.', {
+                    type: 'abandoned',
+                    maxFloorSpace: 10,
+                    unlocked: false,
+                    requirements: {
+                        skills: {
+                            'survival': 3
+                        },
+                        classes: ['waif', 'vagabond']
+                    },
+                    effects: {}
+                });
+                
+                // Add other homes as needed
+            }
+            
+            // Now update the homes with saved data
+            if (this.homes[currentHomeId]) {
+                // Update home properties from character data
+                this.homes[currentHomeId].type = character.home.type || this.homes[currentHomeId].type;
+                this.homes[currentHomeId].usedFloorSpace = character.home.usedFloorSpace || this.homes[currentHomeId].usedFloorSpace;
+                this.homes[currentHomeId].unlocked = true; // If it's in save data, it should be unlocked
+                
+                // If there's furniture data, update it
+                if (character.home.furniture && Array.isArray(character.home.furniture)) {
+                    this.homes[currentHomeId].furniture = character.home.furniture;
+                }
+                
+                // If there are any other properties to copy, do it here
+                if (character.home.effects) this.homes[currentHomeId].effects = character.home.effects;
+                
+                // Notify that the home has been loaded
+                this.eventController.emit('home:loaded', {
+                    homeId: currentHomeId,
+                    name: this.homes[currentHomeId].name,
+                    description: this.homes[currentHomeId].description,
+                    usedFloorSpace: this.homes[currentHomeId].usedFloorSpace,
+                    maxFloorSpace: this.homes[currentHomeId].maxFloorSpace
+                });
+            } else {
+                console.warn(`Home ${currentHomeId} not found in homes collection after initialization. This shouldn't happen.`);
+            }
+        } else {
+            // No saved home data, initialize with defaults
+            this.setupInitialHomes();
         }
-        
-        // Notify that the home has been loaded
-        this.eventController.emit('home:loaded', {
-            homeId: homeId,
-            name: this.homes[homeId].name,
-            description: this.homes[homeId].description,
-            usedFloorSpace: this.homes[homeId].usedFloorSpace,
-            maxFloorSpace: this.homes[homeId].maxFloorSpace
-        });
     }
     
     /**

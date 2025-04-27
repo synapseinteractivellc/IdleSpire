@@ -228,10 +228,7 @@ class SkillController {
     addSkillXP(skillId, amount) {
         const skill = this.skills[skillId];
         if (!skill) return false;
-        
-        // Log XP gain
-        console.log(`Adding ${amount} XP to skill: ${skill.name}`);
-        
+                
         // Add XP and check if leveled up
         const leveledUp = skill.addXP(amount);
         
@@ -261,9 +258,7 @@ class SkillController {
      * Handle skill level up event
      * @param {Skill} skill - The skill that leveled up
      */
-    handleSkillLevelUp(skill) {
-        console.log(`Skill ${skill.name} leveled up to ${skill.currentLevel}!`);
-        
+    handleSkillLevelUp(skill) {        
         // Emit skill level up event
         this.eventController.emit('skill:leveled-up', {
             id: skill.id,
@@ -295,7 +290,6 @@ class SkillController {
             // Apply based on bonus type
             switch (bonus.type) {                
                 case 'stat_max':
-                    console.log('stat_max');
                     // Increase max stat value
                     this.eventController.emit('resource:upgrade', {
                         resource: 'stat',
