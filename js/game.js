@@ -148,7 +148,7 @@ class Game {
             const characterInfo = document.getElementById('game-character-info');
             if (characterInfo) {
                 // For now, we're just showing basic info
-                characterInfo.textContent = `${character.name} the Level 1 ${character.class}`;
+                characterInfo.textContent = `${character.name} the Level 1 ${this.capitalizeFirstLetter(character.class)}`;
             }
         }
     }
@@ -196,16 +196,12 @@ class Game {
             name: characterName,
             class: selectedClass
         };
-        
-        console.log('Creating character:', characterData);
-        
+                
         // Initialize game state with character
         const character = this.gameState.initializeWithCharacter(characterData);
         
         // Save the game state
         this.saveController.saveGame();
-
-        console.log('Game state saved with character:', character);
         
         // Emit character creation event
         this.eventController.emit('character:created', characterData);
@@ -215,6 +211,12 @@ class Game {
         
         // Log a test event
         // this.testEventController.logMessage('Game state initialized with character: ' + characterData.name);
+    }
+
+    // Add this helper method to the UIController class
+    capitalizeFirstLetter(string) {
+        if (!string) return '';
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 }
 
