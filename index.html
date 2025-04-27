@@ -273,6 +273,7 @@
           </div>
       </div>
   </template>
+  
 
     <template id="current-action-template">
         <div class="current-action-container">
@@ -340,40 +341,48 @@
       </div>
     </template>
 
-    <template id="furniture-inventory-template">
-      <div class="furniture-inventory-item" data-furniture-id="FURNITURE_ID">
-          <button class="furniture-place-button">FURNITURE_NAME</button>
-          <div class="furniture-info">
-              <div class="furniture-description">FURNITURE_DESCRIPTION</div>
-              <div class="furniture-size">Space: FURNITURE_SIZE</div>
+    <template id="furniture-grid-template">
+      <div class="furniture-grid">
+        <!-- Furniture items will be added here dynamically -->
+      </div>
+    </template>
+    
+    <template id="furniture-item-template">
+      <div class="furniture-item">
+        <div class="furniture-item-content">
+          <div class="furniture-size">SIZE</div>
+          <div class="furniture-name">
+            <span class="furniture-star">★</span>
+            FURNITURE_NAME
           </div>
+          <div class="furniture-owned">OWNED/MAX</div>
+          <div class="furniture-buttons">
+            <button class="furniture-buy-button">Buy</button>
+            <button class="furniture-sell-button">Sell</button>
+          </div>
+        </div>
+        <div class="furniture-tooltip">
+          <h3 class="tooltip-title">FURNITURE_NAME <span class="tooltip-max">max: MAX</span> <span class="tooltip-star">★</span></h3>
+          <div class="tooltip-category">FURNITURE_CATEGORY</div>
+          <p class="tooltip-description">FURNITURE_DESCRIPTION</p>
+          <div class="tooltip-divider"></div>
+          <div class="tooltip-cost-section">
+            <h4>Cost</h4>
+            <div class="tooltip-cost">Gold: COST_GOLD</div>
+          </div>
+          <div class="tooltip-divider"></div>
+          <div class="tooltip-modifications-section">
+            <h4>Modifications:</h4>
+            <div class="tooltip-modification">Floor Space: FLOOR_SPACE</div>
+            <div class="tooltip-modification">Gold Rate: GOLD_RATE</div>
+            <div class="tooltip-modification">Other Effects: OTHER_EFFECTS</div>
+          </div>
+          <div class="tooltip-notes">SPECIAL_NOTES</div>
+        </div>
       </div>
-  </template>
-  
-  <template id="home-furniture-template">
-      <div class="home-furniture-item" data-furniture-id="FURNITURE_ID">
-          <div class="home-furniture-name">FURNITURE_NAME</div>
-          <button class="furniture-remove-button">Remove</button>
-          <div class="home-furniture-info">FURNITURE_EFFECTS</div>
-      </div>
-  </template>
+    </template>
 
-    <template id="upgrade-button-template">
-      <div class="upgrade-button-container" id="UPGRADE_CONTAINER_ID">
-          <button class="upgrade-button" id="UPGRADE_BUTTON_ID" data-upgrade-id="UPGRADE_TYPE" aria-label="UPGRADE_LABEL">
-              <div class="upgrade-button-fill" data-progress="low"></div>
-              <span class="upgrade-name">UPGRADE_NAME</span>              
-          </button>
-          <!-- Tooltip moved outside the button -->
-          <div class="upgrade-button-tooltip">
-              <span class="upgrade-name-tooltip">UPGRADE_NAME</span><br>
-              <span class="upgrade-completions">Purchased: CURRENT_COUNT/MAX_COUNT</span><br>
-              <span class="upgrade-description">UPGRADE_DESCRIPTION</span><br>
-              <div class="upgrade-costs">COSTS</div><br>
-              <div class="upgrade-effects">EFFECTS</div>
-          </div>
-      </div>
-  </template>
+    
     
     <!-- Core System Scripts -->
     <script src="./js/controllers/eventController.js"></script>

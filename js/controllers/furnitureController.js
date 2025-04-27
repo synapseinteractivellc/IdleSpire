@@ -77,7 +77,7 @@ class FurnitureController {
      */
     createBasicFurniture() {
         // Create a simple bed
-        this.createFurniture('simple_bed', 'Simple Bed', 'A basic bed for sleeping. Improves stamina regeneration.', {
+        const bed = this.createFurniture('simple_bed', 'Simple Bed', 'A basic bed for sleeping. Improves stamina regeneration.', {
             type: 'bed',
             size: 2,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
@@ -93,7 +93,7 @@ class FurnitureController {
         });
         
         // Create a storage chest
-        this.createFurniture('wooden_chest', 'Wooden Chest', 'A basic chest for storing items. Increases gold capacity.', {
+        const chest = this.createFurniture('wooden_chest', 'Wooden Chest', 'A basic chest for storing items. Increases gold capacity.', {
             type: 'storage',
             size: 1,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
@@ -109,7 +109,7 @@ class FurnitureController {
         });
         
         // Create a crafting table
-        this.createFurniture('crafting_table', 'Crafting Table', 'A simple table for crafting. Required for certain skills.', {
+        const craftTable = this.createFurniture('crafting_table', 'Crafting Table', 'A simple table for crafting. Required for certain skills.', {
             type: 'crafting',
             size: 2,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],
@@ -130,7 +130,7 @@ class FurnitureController {
         });
         
         // Create a meditation altar
-        this.createFurniture('meditation_mat', 'Meditation Mat', 'A simple mat for meditation. Increases focus regeneration.', {
+        const meditationMat = this.createFurniture('meditation_mat', 'Meditation Mat', 'A simple mat for meditation. Increases focus regeneration.', {
             type: 'meditation',
             size: 1,
             compatibility: ['abandoned', 'rented', 'owned', 'manor', 'estate', 'palace'],

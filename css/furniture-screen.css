@@ -1,229 +1,214 @@
-/* furniture-screen.css */
-
-/* Furniture Selection Grid */
-.furniture-selection-grid {
+/* Furniture Grid Layout */
+.furniture-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--space-md);
-    padding: var(--space-md);
-    margin-top: var(--space-md);
-}
-
-.furniture-selection-container {
-    position: relative;
-}
-
-.furniture-selection-button {
     width: 100%;
-    height: 120px;
+    margin-top: var(--space-md);
+  }
+  
+  /* Furniture Item Styling */
+  .furniture-item {
+    position: relative;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-medium);
     background-color: var(--color-bg-element);
-    border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.furniture-selection-button:hover:not(.locked) {
-    background-color: var(--color-bg-element-hover);
-    transform: translateY(-3px);
-}
-
-.furniture-selection-button.locked {
-    opacity: 0.6;
-    cursor: not-allowed;
-    filter: grayscale(0.7);
-}
-
-.furniture-selection-button .furniture-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-}
-
-.furniture-selection-button .furniture-selection-status {
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-}
-
-.furniture-selection-tooltip {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    overflow: visible;
+  }
+  
+  /* Alternate row coloring */
+  .furniture-item:nth-child(odd) {
     background-color: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    z-index: 1000;
+  }
+  
+  .furniture-item:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-}
-
-.furniture-selection-container:hover .furniture-selection-tooltip {
-    display: block;
-}
-
-.furniture-selection-tooltip .furniture-tooltip-name {
-    font-size: 1rem;
+    z-index: 10;
+  }
+  
+  .furniture-item-content {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    padding: var(--space-sm);
+    gap: var(--space-sm);
+  }
+  
+  /* Size display */
+  .furniture-size {
+    font-weight: bold;
+    color: var(--color-text-primary);
+    text-align: center;
+    min-width: 30px;
+  }
+  
+  /* Furniture name with star */
+  .furniture-name {
     font-weight: 600;
     color: var(--color-text-primary);
-    margin-bottom: var(--space-xs);
-}
-
-.furniture-selection-tooltip .furniture-tooltip-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .furniture-star {
+    color: #f7b955;
+    margin-right: 4px;
+  }
+  
+  /* Ownership display */
+  .furniture-owned {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-sm);
-}
-
-.furniture-selection-tooltip .furniture-tooltip-space {
+    white-space: nowrap;
+  }
+  
+  /* Button styling */
+  .furniture-buttons {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .furniture-buy-button, .furniture-sell-button {
+    padding: 2px 8px;
     font-size: 0.8rem;
-    color: var(--color-text-tertiary);
-}
-
-/* Furniture Inventory */
-.furniture-inventory-grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-    margin-top: var(--space-md);
-    background-color: var(--color-bg-tertiary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-medium);
-}
-
-.furniture-inventory-heading {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--color-border-medium);
-    padding-bottom: var(--space-xs);
-}
-
-.furniture-inventory-empty {
-    color: var(--color-text-tertiary);
-    font-style: italic;
-    text-align: center;
-    padding: var(--space-sm) 0;
-}
-
-.furniture-inventory-item {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--color-bg-element);
     border-radius: var(--radius-sm);
-    padding: var(--space-sm);
-    margin-bottom: var(--space-sm);
+    cursor: pointer;
     border: 1px solid var(--color-border-medium);
-}
-
-.furniture-place-button {
+  }
+  
+  .furniture-buy-button {
     background-color: var(--color-accent-primary);
     color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: var(--space-xs) var(--space-sm);
-    margin-bottom: var(--space-sm);
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color var(--transition-fast);
-}
-
-.furniture-place-button:hover {
+  }
+  
+  .furniture-buy-button:hover {
     background-color: var(--color-accent-primary-hover);
-}
-
-.furniture-info {
-    font-size: 0.8rem;
+  }
+  
+  .furniture-sell-button {
+    background-color: var(--color-bg-secondary);
     color: var(--color-text-secondary);
-}
-
-.furniture-description {
-    margin-bottom: var(--space-xs);
-}
-
-.furniture-size {
-    font-weight: 600;
-}
-
-/* Home Furniture Display */
-.home-furniture-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-    margin-top: var(--space-md);
-    background-color: var(--color-bg-tertiary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-medium);
-}
-
-.home-furniture-heading {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--color-border-medium);
-    padding-bottom: var(--space-xs);
-}
-
-.home-furniture-item {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--color-bg-element);
-    border-radius: var(--radius-sm);
-    padding: var(--space-sm);
-    margin-bottom: var(--space-sm);
-    border: 1px solid var(--color-border-medium);
-}
-
-.home-furniture-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-sm);
-}
-
-.furniture-remove-button {
+  }
+  
+  .furniture-sell-button:hover {
     background-color: var(--color-accent-danger);
     color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: var(--space-xs) var(--space-sm);
-    margin-bottom: var(--space-sm);
-    cursor: pointer;
+  }
+  
+  /* Tooltip Styling */
+  .furniture-tooltip {
+    position: absolute;
+    top: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    display: none;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+  }
+  
+  .furniture-item:hover .furniture-tooltip {
+    display: block;
+  }
+  
+  /* Tooltip title section */
+  .tooltip-title {
+    font-size: 1.1rem;
     font-weight: 600;
-    transition: background-color var(--transition-fast);
-    align-self: flex-end;
-}
-
-.furniture-remove-button:hover {
-    background-color: hsl(0, 70%, 45%);
-}
-
-.home-furniture-info {
-    font-size: 0.8rem;
-    color: var(--color-accent-success);
-    border-top: 1px solid var(--color-border-medium);
-    padding-top: var(--space-xs);
-    margin-top: var(--space-xs);
+    margin-bottom: 4px;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .furniture-selection-grid,
-    .furniture-inventory-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .tooltip-max {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--color-text-secondary);
+  }
+  
+  .tooltip-star {
+    color: #f7b955;
+  }
+  
+  .tooltip-category {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .tooltip-description {
+    margin-bottom: var(--space-sm);
+  }
+  
+  .tooltip-divider {
+    height: 1px;
+    background-color: var(--color-border-medium);
+    margin: var(--space-sm) 0;
+  }
+  
+  /* Tooltip sections */
+  .tooltip-cost-section h4, 
+  .tooltip-modifications-section h4 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    color: var(--color-text-primary);
+  }
+  
+  .tooltip-cost, .tooltip-modification {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+  
+  /* Special coloring for rates */
+  .tooltip-modification:nth-child(2) {
+    color: #f7b955; /* Gold Rate */
+  }
+  
+  .tooltip-modification:nth-child(3) {
+    color: var(--color-accent-success); /* Positive rate */
+  }
+  
+  .tooltip-modification:nth-child(4) {
+    color: var(--color-accent-primary); /* Another positive rate */
+  }
+  
+  .tooltip-notes {
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-top: var(--space-sm);
+    color: var(--color-text-tertiary);
+  }
+  
+  /* Arrow pointing to the furniture item */
+  .furniture-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent var(--color-border-medium) transparent;
+  }
+  
+  /* Media queries for responsive design */
+  @media (max-width: 768px) {
+    .furniture-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
-}
+    
+    .furniture-tooltip {
+      width: 220px;
+    }
+  }
