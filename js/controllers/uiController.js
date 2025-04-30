@@ -258,21 +258,39 @@ class UIController {
         console.log('Initializing Furniture UI...');
         
         // Get reference to furniture container
-        this.furnitureGrid = document.querySelector('.furniture-grid');
+        this.furnitureSelectionContainer = document.getElementById('furniture-selection-container');
         
-        // If no grid exists, create one from template
-        if (!this.furnitureGrid) {
-            const template = document.getElementById('furniture-grid-template');
-            if (template) {
-                const gridElement = template.content.cloneNode(true);
-                this.furnitureGrid = gridElement.querySelector('.furniture-grid');
-                
-                // Get the furniture container element
-                const furnitureContainer = document.getElementById('furniture-selection-container');
-                if (furnitureContainer) {
-                    furnitureContainer.appendChild(this.furnitureGrid);
-                }
-            }
+        if (!this.furnitureSelectionContainer) return;
+        
+        // Clear any existing content
+        this.furnitureSelectionContainer.innerHTML = '';
+        
+        // Get the table template
+        const tableTemplate = document.getElementById('furniture-table-template');
+        if (!tableTemplate) return;
+        
+        // Clone the template content and add to the container
+        const tableElement = tableTemplate.content.cloneNode(true);
+        this.furnitureSelectionContainer.appendChild(tableElement);
+        
+        // Get reference to the table body where furniture rows will be added
+        this.furnitureTableBody = this.furnitureSelectionContainer.querySelector('.furniture-table tbody');
+        
+        // Add event listeners for filter checkboxes
+        const filterOwned = this.furnitureSelectionContainer.querySelector('#filter-owned');
+        const filterUnowned = this.furnitureSelectionContainer.querySelector('#filter-unowned');
+        const filterBlocked = this.furnitureSelectionContainer.querySelector('#filter-blocked');
+        
+        if (filterOwned) {
+            filterOwned.addEventListener('change', () => this.applyFurnitureFilters());
+        }
+        
+        if (filterUnowned) {
+            filterUnowned.addEventListener('change', () => this.applyFurnitureFilters());
+        }
+        
+        if (filterBlocked) {
+            filterBlocked.addEventListener('change', () => this.applyFurnitureFilters());
         }
         
         // Subscribe to furniture events
@@ -334,6 +352,17 @@ class UIController {
             if (screen.id === `${targetScreenId}-screen`) {
                 screen.classList.remove('hidden');
                 screen.classList.add('active');
+                
+                // If navigating to house screen, show furniture
+                if (targetScreenId === 'house') {
+                    const character = window.game.gameState.getActiveCharacter();
+                    if (character && character.home) {
+                        this.updateFurnitureDisplay(character.home.id);
+                        if (this.furnitureSelectionContainer) {
+                            this.furnitureSelectionContainer.classList.remove('hidden');
+                        }
+                    }
+                }
             } else {
                 screen.classList.add('hidden');
                 screen.classList.remove('active');
@@ -1672,7 +1701,7 @@ class UIController {
     }
     
     /**
-     * Handle home selection
+     * Select a home and display its furniture
      * @param {string} homeId - ID of the selected home
      */
     selectHome(homeId) {
@@ -1682,52 +1711,60 @@ class UIController {
         // Hide home selection grid
         if (this.homeSelectionContainer) {
             this.homeSelectionContainer.classList.add('hidden');
-        }       
+        }
         
+        // Show furniture for the selected home
+        this.updateFurnitureDisplay(homeId);
     }
 
     /**
-     * Create a furniture item element from the template
+     * Create a furniture row element from the template
      * @param {Object} furnitureData - Data for the furniture item
-     * @returns {HTMLElement} The created furniture element
+     * @returns {HTMLElement} The created furniture row element
      */
     createFurnitureElement(furnitureData) {
-        console.log(furnitureData);
         // Get the template
-        const template = document.getElementById('furniture-item-template');
+        const template = document.getElementById('furniture-row-template');
         if (!template) return null;
         
         // Clone the template
         const furnitureElement = template.content.cloneNode(true);
-
-        // Get character data through window.game
+        
+        // Get character data to check ownership
         let ownedCount = 0;
-        let maxCount = 1; // Assuming each furniture has a max of 1 ownership
+        let maxCount = furnitureData.maxCount || 1;
         
         if (window.game && window.game.gameState) {
             const character = window.game.gameState.getActiveCharacter();
-            ownedCount = character?.inventory?.furniture?.[furnitureData.id]?.ownedCount;
-            maxCount = character?.inventory?.furniture?.[furnitureData.id]?.maxCount;
-        }        
-        
-        // Set basic info
-        furnitureElement.querySelector('.furniture-size').textContent = furnitureData.size || 1;
-        furnitureElement.querySelector('.furniture-name').innerHTML = 
-            `<span class="furniture-star">★</span> ${furnitureData.name}`;
-        if(maxCount < Infinity) {
-            furnitureElement.querySelector('.furniture-owned').textContent = `Owned: ${ownedCount}/${maxCount}`;
-        } else if(maxCount === Infinity) {            
-            furnitureElement.querySelector('.furniture-owned').textContent = `Owned: ${ownedCount}`;
+            if (character && character.inventory && character.inventory.furniture && 
+                character.inventory.furniture[furnitureData.id]) {
+                ownedCount = character.inventory.furniture[furnitureData.id].purchased ? 1 : 0;
+            }
         }
         
-        // Set button functionality
+        // Set basic info
+        furnitureElement.querySelector('.furniture-space').textContent = furnitureData.size || 1;
+        
+        const nameElement = furnitureElement.querySelector('.furniture-name');
+        nameElement.textContent = furnitureData.name;
+        nameElement.prepend(furnitureElement.querySelector('.furniture-star'));
+        
+        // Set ownership display
+        const ownedDisplay = furnitureElement.querySelector('.furniture-owned');
+        if (maxCount < Infinity) {
+            ownedDisplay.textContent = `${ownedCount}/${maxCount}`;
+        } else {
+            ownedDisplay.textContent = ownedCount.toString();
+        }
+        
+        // Set up buttons
         const buyButton = furnitureElement.querySelector('.furniture-buy-button');
         const sellButton = furnitureElement.querySelector('.furniture-sell-button');
         
-        // Set ID and data attributes
-        const furnitureItem = furnitureElement.querySelector('.furniture-item');
-        furnitureItem.id = `furniture-${furnitureData.id}`;
-        furnitureItem.dataset.furnitureId = furnitureData.id;
+        // Add ID to the row
+        const row = furnitureElement.querySelector('.furniture-row');
+        row.id = `furniture-${furnitureData.id}`;
+        row.dataset.furnitureId = furnitureData.id;
         
         // Set up buy button
         if (buyButton) {
@@ -1767,34 +1804,33 @@ class UIController {
             // Set cost
             const costElement = tooltip.querySelector('.tooltip-cost');
             if (costElement && furnitureData.costs) {
-                let costText = '';
                 for (const [currency, amount] of Object.entries(furnitureData.costs)) {
-                    costText = `${this.capitalizeFirstLetter(currency)}: ${amount}`;
+                    costElement.textContent = `${this.capitalizeFirstLetter(currency)}: ${amount}`;
+                    break; // Just use the first cost for now
                 }
-                costElement.textContent = costText || 'Free';
             }
-                
-            // Set effects if available
+            
+            // Set effects
             if (furnitureData.effects) {
-                // Set modifications
-                tooltip.querySelector('.tooltip-modification:nth-child(1)').textContent = 
-                    `Floor Space: ${furnitureData.size || 1}`;
-                const effects = furnitureData.effects;
-                
-                // Handle stat regens
-                if (effects.statRegens) {
-                    for (const [stat, value] of Object.entries(effects.statRegens)) {
-                        tooltip.querySelector('.tooltip-modification:nth-child(2)').textContent = 
-                            `${this.capitalizeFirstLetter(stat)} Regen: +${value}/sec`;
+                const modElement = tooltip.querySelector('.tooltip-modification');
+                if (modElement) {
+                    let modText = `Space: ${furnitureData.size || 1}`;
+                    
+                    // Add stat regen effects
+                    if (furnitureData.effects.statRegens) {
+                        for (const [stat, value] of Object.entries(furnitureData.effects.statRegens)) {
+                            modText += `<br>${this.capitalizeFirstLetter(stat)} Regen: +${value}/sec`;
+                        }
                     }
-                }
-                
-                // Handle stat boosts
-                if (effects.statBoosts) {
-                    for (const [stat, value] of Object.entries(effects.statBoosts)) {
-                        tooltip.querySelector('.tooltip-modification:nth-child(3)').textContent = 
-                            `${this.capitalizeFirstLetter(stat)} Max: +${value}`;
+                    
+                    // Add stat boost effects
+                    if (furnitureData.effects.statBoosts) {
+                        for (const [stat, value] of Object.entries(furnitureData.effects.statBoosts)) {
+                            modText += `<br>${this.capitalizeFirstLetter(stat)} Max: +${value}`;
+                        }
                     }
+                    
+                    modElement.innerHTML = modText;
                 }
             }
         }
@@ -1807,18 +1843,62 @@ class UIController {
      * @param {Object} furnitureData - Data for the furniture item
      */
     addFurnitureItem(furnitureData) {
-        // Skip if the furniture UI hasn't been initialized
-        if (!this.furnitureGrid) return;
+        // Skip if the furniture table body hasn't been initialized
+        if (!this.furnitureTableBody) return;
         
-        // Check if furniture already exists in the grid
+        // Check if furniture already exists in the table
         const existingFurniture = document.getElementById(`furniture-${furnitureData.id}`);
         if (existingFurniture) return;
         
         // Create and add the furniture element
-        const furnitureElement = this.createFurnitureElement(furnitureData);
-        if (furnitureElement) {
-            this.furnitureGrid.appendChild(furnitureElement);
+        const furnitureRow = this.createFurnitureElement(furnitureData);
+        if (furnitureRow) {
+            this.furnitureTableBody.appendChild(furnitureRow);
         }
+        
+        // Update space indicator
+        this.updateSpaceIndicator();
+    }
+
+    /**
+     * Update space indicator in the furniture display
+     */
+    updateSpaceIndicator() {
+        const spaceIndicator = this.furnitureSelectionContainer?.querySelector('.space-indicator');
+        if (!spaceIndicator) return;
+        
+        const character = window.game?.gameState?.getActiveCharacter();
+        if (!character || !character.home) return;
+        
+        const currentHome = character.home;
+        spaceIndicator.textContent = `Space: ${currentHome.usedFloorSpace || 0}/${currentHome.maxFloorSpace || 0}`;
+    }
+
+    /**
+     * Apply furniture filters based on checkbox states
+     */
+    applyFurnitureFilters() {
+        if (!this.furnitureSelectionContainer) return;
+        
+        const filterOwned = this.furnitureSelectionContainer.querySelector('#filter-owned')?.checked;
+        const filterUnowned = this.furnitureSelectionContainer.querySelector('#filter-unowned')?.checked;
+        const filterBlocked = this.furnitureSelectionContainer.querySelector('#filter-blocked')?.checked;
+        
+        // Get all furniture rows
+        const furnitureRows = this.furnitureTableBody?.querySelectorAll('.furniture-row');
+        if (!furnitureRows) return;
+        
+        furnitureRows.forEach(row => {
+            const ownedText = row.querySelector('.furniture-owned')?.textContent;
+            const isOwned = ownedText && parseInt(ownedText) > 0;
+            
+            // Simple filter logic
+            if ((isOwned && filterOwned) || (!isOwned && filterUnowned)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
 
     /**
@@ -1888,50 +1968,41 @@ class UIController {
     }
 
     /**
-     * Update furniture display for a specific home
+     * Update the entire furniture display
      * @param {string} homeId - ID of the home to display furniture for
      */
     updateFurnitureDisplay(homeId) {
-        // Get furniture controller to access furniture data
-        const furnitureController = window.game.furnitureController;
+        // Make sure the furniture container is visible
+        if (this.furnitureSelectionContainer) {
+            this.furnitureSelectionContainer.classList.remove('hidden');
+        }
+        
+        // Update space indicator
+        this.updateSpaceIndicator();
+        
+        // Get all furniture items
+        const furnitureController = window.game?.furnitureController;
         if (!furnitureController) return;
         
-        // Show furniture container
-        const furnitureContainer = document.getElementById('furniture-selection-container');
-        if (furnitureContainer) {
-            furnitureContainer.classList.remove('hidden');
+        // Clear existing furniture items
+        if (this.furnitureTableBody) {
+            this.furnitureTableBody.innerHTML = '';
         }
         
-        // Filter furniture specifically for this home
+        // Add all furniture items
+        for (const furnitureId in furnitureController.furniture) {
+            const furniture = furnitureController.furniture[furnitureId];
+            this.addFurnitureItem(furniture);
+        }
+        
+        // Update placement status
         const placedFurniture = furnitureController.getPlacedFurnitureInHome(homeId);
-        
-        // Mark all furniture as not placed first
-        const allFurnitureItems = document.querySelectorAll('.furniture-item');
-        allFurnitureItems.forEach(item => {
-            item.classList.remove('placed');
-            
-            // Enable sell buttons
-            const sellButton = item.querySelector('.furniture-sell-button');
-            if (sellButton && !sellButton.disabled) {
-                sellButton.disabled = false;
-                sellButton.title = '';
-            }
-        });
-        
-        // Then mark the ones that are placed
         for (const furnitureId in placedFurniture) {
-            const furnitureItem = document.getElementById(`furniture-${furnitureId}`);
-            if (furnitureItem) {
-                furnitureItem.classList.add('placed');
-                
-                // Disable sell button if it's placed
-                const sellButton = furnitureItem.querySelector('.furniture-sell-button');
-                if (sellButton) {
-                    sellButton.disabled = true;
-                    sellButton.title = 'Remove from home first';
-                }
-            }
+            this.updateFurniturePlacement({ furnitureId });
         }
+        
+        // Apply filters
+        this.applyFurnitureFilters();
     }
 
     /**

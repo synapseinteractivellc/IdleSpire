@@ -1,214 +1,132 @@
-/* Furniture Grid Layout */
-.furniture-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--space-md);
-    width: 100%;
-    margin-top: var(--space-md);
-  }
-  
-  /* Furniture Item Styling */
-  .furniture-item {
-    position: relative;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-medium);
-    background-color: var(--color-bg-element);
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    overflow: visible;
-  }
-  
-  /* Alternate row coloring */
-  .furniture-item:nth-child(odd) {
-    background-color: var(--color-bg-tertiary);
-  }
-  
-  .furniture-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    z-index: 10;
-  }
-  
-  .furniture-item-content {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    padding: var(--space-sm);
-    gap: var(--space-sm);
-  }
-  
-  /* Size display */
-  .furniture-size {
-    font-weight: bold;
-    color: var(--color-text-primary);
-    text-align: center;
-    min-width: 30px;
-  }
-  
-  /* Furniture name with star */
-  .furniture-name {
-    font-weight: 600;
-    color: var(--color-text-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .furniture-star {
-    color: #f7b955;
-    margin-right: 4px;
-  }
-  
-  /* Ownership display */
-  .furniture-owned {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    white-space: nowrap;
-  }
-  
-  /* Button styling */
-  .furniture-buttons {
-    display: flex;
-    gap: 4px;
-  }
-  
-  .furniture-buy-button, .furniture-sell-button {
-    padding: 2px 8px;
-    font-size: 0.8rem;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 1px solid var(--color-border-medium);
-  }
-  
-  .furniture-buy-button {
-    background-color: var(--color-accent-primary);
-    color: white;
-  }
-  
-  .furniture-buy-button:hover {
-    background-color: var(--color-accent-primary-hover);
-  }
-  
-  .furniture-sell-button {
-    background-color: var(--color-bg-secondary);
-    color: var(--color-text-secondary);
-  }
-  
-  .furniture-sell-button:hover {
-    background-color: var(--color-accent-danger);
-    color: white;
-  }
-  
-  /* Tooltip Styling */
-  .furniture-tooltip {
-    position: absolute;
-    top: 105%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 280px;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border-medium);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    box-shadow: var(--shadow-md);
-    z-index: 100;
-    display: none;
-    color: var(--color-text-primary);
-    font-size: 0.9rem;
-  }
-  
-  .furniture-item:hover .furniture-tooltip {
-    display: block;
-  }
-  
-  /* Tooltip title section */
-  .tooltip-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .tooltip-max {
-    font-size: 0.8rem;
-    font-weight: normal;
-    color: var(--color-text-secondary);
-  }
-  
-  .tooltip-star {
-    color: #f7b955;
-  }
-  
-  .tooltip-category {
-    font-size: 0.8rem;
-    font-style: italic;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-sm);
-  }
-  
-  .tooltip-description {
-    margin-bottom: var(--space-sm);
-  }
-  
-  .tooltip-divider {
-    height: 1px;
-    background-color: var(--color-border-medium);
-    margin: var(--space-sm) 0;
-  }
-  
-  /* Tooltip sections */
-  .tooltip-cost-section h4, 
-  .tooltip-modifications-section h4 {
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-    color: var(--color-text-primary);
-  }
-  
-  .tooltip-cost, .tooltip-modification {
-    font-size: 0.9rem;
-    margin-bottom: 2px;
-  }
-  
-  /* Special coloring for rates */
-  .tooltip-modification:nth-child(2) {
-    color: #f7b955; /* Gold Rate */
-  }
-  
-  .tooltip-modification:nth-child(3) {
-    color: var(--color-accent-success); /* Positive rate */
-  }
-  
-  .tooltip-modification:nth-child(4) {
-    color: var(--color-accent-primary); /* Another positive rate */
-  }
-  
-  .tooltip-notes {
-    font-size: 0.8rem;
-    font-style: italic;
-    margin-top: var(--space-sm);
-    color: var(--color-text-tertiary);
-  }
-  
-  /* Arrow pointing to the furniture item */
-  .furniture-tooltip::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 0 10px 10px;
-    border-style: solid;
-    border-color: transparent transparent var(--color-border-medium) transparent;
-  }
-  
-  /* Media queries for responsive design */
-  @media (max-width: 768px) {
-    .furniture-grid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-    
-    .furniture-tooltip {
-      width: 220px;
-    }
-  }
+/* === CSS Updates - Replace furniture-screen.css === */
+
+/* Furniture Tab Layout */
+.furniture-tabs {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--color-border-medium);
+}
+
+.furniture-tab {
+  padding: 8px 15px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.furniture-tab.active {
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-accent-primary);
+}
+
+/* Filter Options */
+.furniture-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.furniture-filters label {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.space-indicator {
+  margin-left: auto;
+  font-size: 14px;
+}
+
+/* Furniture Table Layout */
+.furniture-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.furniture-table th {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid var(--color-border-medium);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.furniture-table tr:nth-child(even) {
+  background-color: var(--color-bg-tertiary);
+}
+
+.furniture-table td {
+  padding: 8px;
+  vertical-align: middle;
+}
+
+.furniture-space {
+  text-align: center;
+  width: 60px;
+}
+
+.furniture-name {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.furniture-star {
+  color: #f7b955;
+  margin-right: 5px;
+}
+
+.furniture-owned {
+  text-align: center;
+  width: 80px;
+}
+
+.furniture-actions {
+  width: 100px;
+  text-align: right;
+}
+
+.furniture-buy-button, .furniture-sell-button {
+  padding: 2px 10px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-left: 4px;
+  border: 1px solid var(--color-border-medium);
+}
+
+.furniture-buy-button {
+  background-color: var(--color-accent-primary);
+  color: white;
+}
+
+.furniture-sell-button {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+/* Tooltip simplified */
+.furniture-row {
+  position: relative;
+}
+
+.furniture-tooltip {
+  position: absolute;
+  top: 0;
+  left: 110%;
+  width: 280px;
+  z-index: 100;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-md);
+  display: none;
+}
+
+.furniture-row:hover .furniture-tooltip {
+  display: block;
+}

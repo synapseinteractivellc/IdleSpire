@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/components.css">
     <link rel="stylesheet" href="./css/currency-screen.css">    
     <link rel="stylesheet" href="./css/home-screen.css">
+    <link rel="stylesheet" href="./css/furniture-screen.css">
     <link rel="stylesheet" href="./css/layout.css">
     <link rel="stylesheet" href="./css/skills-screen.css">
     <link rel="stylesheet" href="./css/stat-screen.css">
@@ -341,26 +342,52 @@
       </div>
     </template>
 
-    <template id="furniture-grid-template">
-      <div class="furniture-grid">
-        <!-- Furniture items will be added here dynamically -->
+    <!-- Add this furniture-table-template in index.html -->
+    <template id="furniture-table-template">
+      <div class="furniture-tabs">
+        <button class="furniture-tab active">Furniture</button>
+        <button class="furniture-tab">Converters</button>
       </div>
+      
+      <div class="furniture-filters">
+        <label>
+          <input type="checkbox" id="filter-owned"> Owned
+        </label>
+        <label>
+          <input type="checkbox" id="filter-unowned" checked> Unowned
+        </label>
+        <label>
+          <input type="checkbox" id="filter-blocked" checked> Blocked
+        </label>
+        
+        <span class="space-indicator">Space: 0/0</span>
+      </div>
+      
+      <table class="furniture-table">
+        <thead>
+          <tr>
+            <th>Space</th>
+            <th>Furnishing</th>
+            <th>Owned</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Furniture rows will be added here -->
+        </tbody>
+      </table>
     </template>
-    
-    <template id="furniture-item-template">
-      <div class="furniture-item">
-        <div class="furniture-item-content">
-          <div class="furniture-size">SIZE</div>
-          <div class="furniture-name">
-            <span class="furniture-star">★</span>
-            FURNITURE_NAME
-          </div>
-          <div class="furniture-owned">OWNED/MAX</div>
-          <div class="furniture-buttons">
-            <button class="furniture-buy-button">Buy</button>
-            <button class="furniture-sell-button">Sell</button>
-          </div>
-        </div>
+
+    <!-- Add this furniture-row-template in index.html -->
+    <template id="furniture-row-template">
+      <tr class="furniture-row">
+        <td class="furniture-space">SIZE</td>
+        <td class="furniture-name"><span class="furniture-star">★</span> NAME</td>
+        <td class="furniture-owned">OWNED/MAX</td>
+        <td class="furniture-actions">
+          <button class="furniture-buy-button">Buy</button>
+          <button class="furniture-sell-button">Sell</button>
+        </td>
         <div class="furniture-tooltip">
           <h3 class="tooltip-title">FURNITURE_NAME <span class="tooltip-max">max: MAX</span> <span class="tooltip-star">★</span></h3>
           <div class="tooltip-category">FURNITURE_CATEGORY</div>
@@ -373,10 +400,11 @@
           <div class="tooltip-divider"></div>
           <div class="tooltip-modifications-section">
             <h4>Modifications:</h4>
+            <div class="tooltip-modification"></div>
           </div>
           <div class="tooltip-notes">SPECIAL_NOTES</div>
         </div>
-      </div>
+      </tr>
     </template>
 
     
