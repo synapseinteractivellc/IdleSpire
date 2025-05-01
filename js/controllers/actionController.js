@@ -62,9 +62,11 @@ class ActionController {
         // Clear existing actions
         this.actions = {};
         
-        // Create default actions based on character class
-        this.createDefaultActions(character.class);
+        // Create the config loader
+        const configLoader = new ConfigLoader(this.eventController);
         
+        // Load actions from config
+        configLoader.loadActions(this, ActionConfig, character);
     }
     
     /**
@@ -502,7 +504,7 @@ class ActionController {
                     for (const unlockId in randomReward.unlocks) {
                         // Emit unlock event
                         this.eventController.emit('action:unlocked', {
-                            id: unlockId,
+                            id: unlockId,                            
                             message: randomReward.message
                         });
                         
@@ -763,18 +765,24 @@ class ActionController {
     unlockAction(actionId) {
         const action = this.actions[actionId];
         if (!action || action.unlocked) {
+            console.log(`Action ${actionId} is already unlocked or doesn't exist`);
             return false;
         }
         
+        console.log(`Unlocking action: ${actionId} (${action.name})`);
         action.unlocked = true;
         this.updateCharacterActionData(action);
         
-        // Emit action unlocked event
+        // Emit action unlocked event with all required data
         this.eventController.emit('action:unlocked', {
-            id: action.id,
-            name: action.name
+            id: actionId,
+            name: action.name,
+            description: action.description,
+            unlocked: true,
+            isRestAction: action.isRestAction || false
         });
         
+        console.log(`Emitted action:unlocked event for ${actionId}`);
         return true;
     }
     

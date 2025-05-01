@@ -277,6 +277,9 @@ class SkillController {
         
         // Check if any skills should be unlocked
         this.checkSkillUnlocks(skill);
+        
+        // Check if any actions should be unlocked (NEW LINE)
+        this.checkActionUnlocks(skill);
     }
     
     /**
@@ -614,5 +617,64 @@ class SkillController {
         });
         
         return true;
+    }
+
+    /**
+     * Check for unlockable actions when skills level up
+     * @param {Skill} skill - The skill that leveled up
+     */
+    checkActionUnlocks(skill) {
+        // Get action controller
+        const actionController = window.game.actionController;
+        if (!actionController) return;
+
+        const character = this.gameState.getActiveCharacter();
+        if (!character) return;
+
+        console.log(`Checking action unlocks for ${skill.name} level ${skill.currentLevel}`);
+
+        // Check all actions in the controller for unlockability
+        for (const actionId in actionController.actions) {
+            const action = actionController.actions[actionId];
+            
+            // Skip already unlocked actions
+            if (action.unlocked) {
+                continue;
+            }
+
+            // Skip actions without requirements
+            if (!action.requirements || !action.requirements.skills) {
+                continue;
+            }
+
+            // Check if this action requires the skill that just leveled up
+            if (action.requirements.skills[skill.id]) {
+                const requiredLevel = action.requirements.skills[skill.id];
+                
+                // If the current skill level meets the requirement
+                if (skill.currentLevel >= requiredLevel) {
+                    let allRequirementsMet = true;
+                    
+                    // Check all other skill requirements
+                    for (const reqSkillId in action.requirements.skills) {
+                        if (reqSkillId === skill.id) continue; // Skip the current skill
+                        
+                        const reqLevel = action.requirements.skills[reqSkillId];
+                        const currentLevel = character.skills?.[reqSkillId]?.currentLevel || 0;
+                        
+                        if (currentLevel < reqLevel) {
+                            allRequirementsMet = false;
+                            break;
+                        }
+                    }
+                    
+                    // If all requirements are met, unlock the action
+                    if (allRequirementsMet) {
+                        console.log(`Unlocking action ${action.id} because ${skill.id} reached level ${skill.currentLevel}`);
+                        actionController.unlockAction(action.id);
+                    }
+                }
+            }
+        }
     }
 }

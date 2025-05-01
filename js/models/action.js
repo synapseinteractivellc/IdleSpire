@@ -42,6 +42,8 @@ class Action {
         this.skillExperience = options.skillExperience || {}; // Skill XP gained on completion
         
         // Unlocking requirements
+        // Add this to the Action class constructor
+        this.requirements = options.requirements || null;
         this.requiredClass = options.requiredClass || null;
         this.requiredSkills = options.requiredSkills || {}; // e.g., { woodcutting: 5 } for level 5 woodcutting
         this.requiredActions = options.requiredActions || {}; // e.g., { chopWood: 10 } for 10 completions

@@ -134,6 +134,7 @@ class UIController {
         
         // Listen for action unlocked
         this.eventController.on('action:unlocked', (data) => {
+            console.log("Action unlocked in UI." + data);
             this.addActionButton(data);
             this.showActionUnlockedMessage(data);
         });

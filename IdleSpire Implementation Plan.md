@@ -66,9 +66,9 @@ The game follows an MVC (Model-View-Controller) architecture:
 ## Phase 3: Game Content (Week 3)
 
 #### 3.1 Basic Skills
-- [~] Implement `Skill` class (placeholder created, needs implementation)
-- [~] Implement `SkillController` (placeholder created, needs implementation)
-- [ ] Create initial set of skills for each class path
+- [X] Implement `Skill` class (placeholder created, needs implementation)
+- [X] Implement `SkillController` (placeholder created, needs implementation)
+- [~] Create initial set of skills for each class path
 
 #### 3.2 Basic Actions
 - [ ] Create tier 1 actions for resource gathering
